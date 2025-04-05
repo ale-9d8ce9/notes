@@ -7,6 +7,9 @@ class newNote {
         this.editable = true
     }
     addElement(type, data, size, style) {
+        if (!this.editable) {
+            throw new Error('Note is not editable')
+        } else {
         let element
         switch (type) {
             case 'text':
@@ -20,7 +23,7 @@ class newNote {
         }
         element.type = type
         this.elements.push(element)
-    }
+    }}
     load() {
         this.versionCheck()
     }
@@ -31,6 +34,7 @@ class newNote {
         }
     }
 }
+
 class text {
     constructor(size, text, style) {
         this.text = text
