@@ -21,24 +21,24 @@ render.all = function () {
 }
 
 render.text = function (data, i) {
-    if (document.getElementById('text-element-' + i)) {
+    if (document.getElementById('element-' + i)) {
         // If the element already exists set the variables to the existing element
-        render.element = document.getElementById('text-element-' + i)
-        render.elementPopup = document.getElementById('text-element-popup-' + i)
-        render.elementData = document.getElementById('text-element-data-' + i)
+        render.element = document.getElementById('element-' + i)
+        render.elementPopup = document.getElementById('element-popup-' + i)
+        render.elementData = document.getElementById('element-data-' + i)
         render.alreadyRendered = true
     } else {
         // If the element does not exist create a new one
         render.element = document.createElement('div')
-        render.element.className = 'text-element element'
-        render.element.id = 'text-element-' + i
+        render.element.className = 'element element'
+        render.element.id = 'element-' + i
 
         render.elementPopup = document.createElement('div')
         render.elementPopup.className = 'popup'
-        render.elementPopup.id = 'text-element-popup-' + i
+        render.elementPopup.id = 'element-popup-' + i
 
         render.elementData = document.createElement('pre')
-        render.elementData.id = 'text-element-data-' + i
+        render.elementData.id = 'element-data-' + i
         render.alreadyRendered = false
     }
     // Set the element data and values
@@ -58,10 +58,10 @@ render.text = function (data, i) {
         note.editable ? render.element.appendChild(render.elementPopup) : undefined
         render.element.appendChild(render.elementData)
         noteContent.appendChild(render.element)
-        render.elementData.onblur = function () {
-            note.elements[i].text = render.elementData.innerText
-            render.text(note.elements[i], i)
-        }
+        render.elementData.setAttribute('onblur', `() => {
+            note.elements[${i}].text = render.elementData.innerText;
+            render.text(note.elements[${i}], ${i});
+        }`)
     }
 }
 

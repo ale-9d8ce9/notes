@@ -28,11 +28,6 @@
 
 
 
-#add-text-preview{
-    position: absolute;
-    color: #fff;
-}
-
 
 .popup-section{
     display: flex;
@@ -45,12 +40,12 @@
     box-sizing: content-box;
 }
 
-.text-element{
+.element{
     color: #fff;
 }
-.text-element pre {position: relative;}
+.element pre {position: relative;}
 
-.text-element:has(pre:focus),#add-text-preview:focus{
+.element:has(pre:focus){
     outline: 1px solid #fff;
     outline-offset: .5rem;
 }
@@ -69,7 +64,7 @@
     opacity: 0;
     scale: 0;
 }
-.text-element:hover .popup, .text-element:has(pre:focus) .popup{
+.element:hover .popup, .element:has(pre:focus) .popup{
     translate: -50% -100%;
     scale: 1;
     opacity: 1;
