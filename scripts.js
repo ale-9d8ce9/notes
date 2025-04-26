@@ -5,6 +5,7 @@ const noteContent = document.getElementById('note-content')
 function start() {
     note = new newNote('test note')
     note.load()
+    openOverlay()
 }
 
 function loadScript(path) {
@@ -18,4 +19,11 @@ function loadScript(path) {
     document.body.appendChild(script)
 }
 
-
+function openOverlay(overlayName) {
+    for (let i = 0; i < document.getElementsByClassName('overlay-section').length; i++) {
+        document.getElementsByClassName('overlay-section')[i].removeAttribute('show')
+    }
+    if (overlayName) {
+        document.querySelector('#'+overlayName+'.overlay-section').setAttribute('show', '')
+    }
+}

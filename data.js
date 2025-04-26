@@ -2,7 +2,8 @@ class newNote {
     constructor(name) {
         this.name = name
         this.elements = []
-        this.date = new Date()
+        this.dateCreated = (new Date()).toISOString()
+        this.dateModified = (new Date()).toISOString()
         this.version = app.buildVersion
         this.editable = true
     }
