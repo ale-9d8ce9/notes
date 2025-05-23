@@ -1,49 +1,13 @@
-async function serverRequest(request) {
+async function apiRequest(request) {
     try {
-        url = app.backend + '?username=' + request.username + '&password=' + request.password + '&action='
-        switch (request.action) {
-            case 'addNote':
-                url += 'addNote' + '&noteId=' + request.noteId + '&note=' + JSON.stringify(note)
-                break
-            case 'saveNote':
-                url += 'saveNote' + '&noteId=' + request.noteId
-                break
-            case 'getNote':
-                url += 'getNote' + '&noteId=' + request.noteId
-                break
-            default:
-                url += request.action
-                break
-        }
-        let body = JSON.stringify(request.uploadFile)
-        console.log(body)
-        response = await fetch(url, {
+        let url = app.backend + '?action=' + request.action
+        response = await (await fetch(url, {
             method: 'POST',
-            body: body,
-            headers: {'Content-Type': 'application/json'}
-        })
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        const responseText = await response.text()
-        let data = JSON.parse(responseText)
-        if (data.status == 'error') {
-            console.error('Error from server:', data.message)
-            return data.message
-        } else {
-            switch (request.action) {
-                case 'addUser':
-                    console.log('User added:', data)
-                    return data.status == 'success'
-                case 'getListNotes':
-                    console.log('List of notes:', JSON.parse(data.message))
-                    return {status:data.status, message:JSON.parse(data.message)}
-                    
-                default:
-                    console.log(data)
-                    return data
-            }
-        }
+            body: JSON.stringify(request),
+            headers: {'Content-Type': 'text/plain'}
+        })).text()
+        console.log(JSON.parse(response))
+        return JSON.parse(response)
     } catch (error) {
         console.error('Error fetching data:', error)
         return null 
@@ -51,27 +15,28 @@ async function serverRequest(request) {
 }
 
 document.getElementById('register-button').onclick = async function () {
-    if ((message = await serverRequest({
+    if ((message = await apiRequest({
         action: 'addUser',
-        username: document.getElementById('register-username').value,
-        password: document.getElementById('register-password').value
-    })) === true) {
+        username: document.getElementById('register-username').value.trim(),
+        password: document.getElementById('register-password').value.trim()
+    })).result === 'success') {
         alert('User added successfully')
         document.getElementById('register-username').value = ''
         document.getElementById('register-password').value = ''
     } else {
-        alert('Error adding user: ' + message)
+        alert('Error adding user: ' + message.message)
     }
 }
 
 async function getListNotes(username, password) {
     openOverlay('listNotes')
-    notes = await serverRequest({
+    notes = await apiRequest({
         action: 'getListNotes',
         username: username,
         password: password
     })
-    if (notes.status == 'success') {
+    console.log(notes)
+    if (notes.result == 'success') {
         // save login data
         app.user.username = username
         app.user.password = password
@@ -82,40 +47,53 @@ async function getListNotes(username, password) {
             document.getElementById('notes-list').innerHTML += `
             <div class="listNoteElement">
             <div class="noteTitle">${j.name}</div>
-            <p>${j.date}</p>
+            <p>${j.dateModified}</p>
             </div>
             `
         }
     } else {
         // show error
-        console.error('Error fetching notes:', notes)
+        console.error('Error fetching notes:', notes.message)
     }
 }
 
-async function addNote(noteId) {
-    delete note.editable
-    delete note.elements
-    serverRequest({
+async function addNote() {
+    apiRequest({
         action: 'addNote',
         username: app.user.username,
         password: app.user.password,
-        noteId: noteId
+        note: JSON.stringify(note)
     })
 }
 
 
-async function saveNote(noteId) {
+async function saveNote() {
     if (note.editable) {
-        // prepare note
-        note.dateModified = (new Date()).toISOString()
         note.version = app.buildVersion
+        // prepare note
+        let noteToUpload = JSON.parse(JSON.stringify(note))
+        for (let i = 0; i < noteToUpload.files.length; i++) {
+            file = noteToUpload.files[i];
+            // if file exist
+            if (file != null) {
+                // if file is not updated
+                if (file.updated == false) {
+                    // "remove" file from upload
+                    noteToUpload.files[i] = null
+                } else {
+                    // if file is updated it isnt gonna be anymore
+                    note.files[i].updated = false
+                }
+            }
+        }
+        noteToUpload.dateModified = (new Date()).toISOString()
         // send
-        result = await serverRequest({
+        result = await apiRequest({
             action: 'saveNote',
             username: app.user.username,
             password: app.user.password,
-            noteId: noteId,
-            uploadFile: note
+            noteId: 0,
+            note: JSON.stringify(noteToUpload)
         })
     } else {
         alert('Note is not editable')

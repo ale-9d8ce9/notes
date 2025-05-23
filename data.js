@@ -1,29 +1,42 @@
 class newNote {
-    constructor(name) {
+    constructor(name, isNew, elements, files) {
         this.name = name
         this.elements = []
-        this.dateCreated = (new Date()).toISOString()
+        this.files = []
+
         this.dateModified = (new Date()).toISOString()
-        this.version = app.buildVersion
-        this.editable = true
+
+        if (isNew) {
+            this.dateCreated = (new Date()).toISOString()
+            this.version = app.buildVersion
+            this.editable = true
+        } else {
+            this.elements = elements
+            this.files = files
+        }
     }
     addElement(type, data, size) {
         if (!this.editable) {
             throw new Error('Note is not editable')
         } else {
             let element
+            let file
             switch (type) {
                 case 'text':
-                    element = new text(size, data)
+                    element = new newElement.text(size, data)
+                    file = null
+                    this.elements.push(element)
+                    this.files.push(file)
                     break
                 case 'image':
-                    element = new image(size, data)
+                    element = new newElement.image(size, this.elements.length)
+                    file = new newFile.image(data)
+                    this.elements.push(element)
+                    this.files.push(file)
                     break
                 default:
                     throw new Error('Unknown type')
             }
-            element.type = type
-            this.elements.push(element)
         }
     }
     load() {
@@ -37,35 +50,57 @@ class newNote {
     }
 }
 
-class text {
-    constructor(size, text) {
-        this.text = text
-        this.x = size.x1
-        this.y = size.y1
-        this.style = {
-            align: 'left',
-            font: 'Arial',
-            textSize: 12,
-            color: '#000000',
-            background: '#ffffff',
-            opacity: 1,
-            underline: false,
-            bold: false,
-            italic: false,
-            strikethrough: false,
+newElement = {
+    text : class {
+        constructor(size, text) {
+            this.type = 'text'
+            this.x = size.x1
+            this.y = size.y1
+            
+            this.text = text
+            
+            this.style = {
+                align: 'left',
+                font: 'Arial',
+                textSize: 12,
+                color: '#000000',
+                background: '#ffffff',
+                opacity: 1,
+                underline: false,
+                bold: false,
+                italic: false,
+                strikethrough: false,
+            }
+        }
+    }, image : class {
+        constructor(size, i) {
+            this.type = 'image'
+            
+            this.x = size.x1
+            this.y = size.y1
+            this.width = size.x2 - size.x1
+            this.height = size.y2 - size.y1
+            this.fileIndex = i
+
+            this.style = {
+                opacity: 1,
+                border: 'none',
+                borderRadius: '0px',
+                boxShadow: 'none',
+                background: '#ffffff'
+            }
         }
     }
 }
-
-
-class image {
-    constructor(size, src, style) {
-        this.src = src
-        this.x = size.x1
-        this.y = size.y1
-        this.width = size.x2 - size.x1
-        this.height = size.y2 - size.y1
+newFile = {
+    image : class {
+        constructor(data) {
+            this.type = 'image'
+            this.data = data
+            this.size = data.length
+            this.updated = true
+            this.deleted = false
+        }
     }
 }
-
 

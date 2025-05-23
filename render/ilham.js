@@ -8,7 +8,7 @@ render.all = function () {
                 break
             case 'image':
                 const imgElement = document.createElement('img')
-                imgElement.src = element.src
+                imgElement.src = note.files[i].data
                 imgElement.style.position = 'absolute'
                 imgElement.style.left = element.x + 'px'
                 imgElement.style.top = element.y + 'px'
@@ -62,6 +62,44 @@ render.text = function (data, i) {
             note.elements[${i}].text = this.innerText;
             render.text(note.elements[${i}], ${i});
         `)
+    }
+}
+render.image = function (data, i) {
+    if (document.getElementById('element-' + i)) {
+        // If the element already exists set the variables to the existing element
+        render.element = document.getElementById('element-' + i)
+        render.elementPopup = document.getElementById('element-popup-' + i)
+        render.elementData = document.getElementById('element-data-' + i)
+        render.alreadyRendered = true
+    } else {
+        // If the element does not exist create a new one
+        render.element = document.createElement('div')
+        render.element.className = 'element element'
+        render.element.id = 'element-' + i
+
+        render.elementPopup = document.createElement('div')
+        render.elementPopup.className = 'popup'
+        render.elementPopup.id = 'element-popup-' + i
+
+        render.elementData = document.createElement('pre')
+        render.elementData.id = 'element-data-' + i
+        render.alreadyRendered = false
+    }
+    // Set the element data and values
+    render.element.style.left = data.x + 'px'
+    render.element.style.top = data.y + 'px'
+    
+    render.elementData.src = data.text
+    note.editable ? render.elementData.contentEditable = true : undefined
+    render.elementData.style.textAlign = data.style.align
+    render.elementData.style.fontFamily = data.style.font
+    render.elementData.style.fontSize = data.style.textSize + 'px'
+
+    if (!render.alreadyRendered) {
+        // If the element does not exist add the new element to the note
+        note.editable ? render.element.appendChild(render.elementPopup) : undefined
+        render.element.appendChild(render.elementData)
+        noteContent.appendChild(render.element)
     }
 }
 
