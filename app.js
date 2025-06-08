@@ -4,9 +4,11 @@ app = {
     version: '0.1.0',
     backend: 'http://localhost:8080/notes',
     user: {
-        username: 'ale',
-        password: 'none'
+        username: '',
+        password: ''
     },
+    zoom: [1, 1],
+    isSaving: false,
 
     history: [
         {

@@ -29,8 +29,8 @@ class newNote {
                     this.files.push(file)
                     break
                 case 'image':
-                    element = new newElement.image(size, this.elements.length)
-                    file = new newFile.image(data)
+                    element = new newElement.image(size)
+                    file = new newFile(data)
                     this.elements.push(element)
                     this.files.push(file)
                     break
@@ -56,7 +56,8 @@ newElement = {
             this.type = 'text'
             this.x = size.x1
             this.y = size.y1
-            
+            this.width = -1
+            this.height = -1
             this.text = text
             
             this.style = {
@@ -73,14 +74,13 @@ newElement = {
             }
         }
     }, image : class {
-        constructor(size, i) {
+        constructor(size) {
             this.type = 'image'
             
             this.x = size.x1
             this.y = size.y1
             this.width = size.x2 - size.x1
             this.height = size.y2 - size.y1
-            this.fileIndex = i
 
             this.style = {
                 opacity: 1,
@@ -92,15 +92,11 @@ newElement = {
         }
     }
 }
-newFile = {
-    image : class {
-        constructor(data) {
-            this.type = 'image'
-            this.data = data
-            this.size = data.length
-            this.updated = true
-            this.deleted = false
-        }
+class newFile {
+    constructor(data) {
+        this.data = data
+        this.updated = true
+        this.deleted = false
     }
 }
 

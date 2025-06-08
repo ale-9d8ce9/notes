@@ -1,16 +1,20 @@
 async function apiRequest(request) {
     try {
         let url = app.backend + '?action=' + request.action
-        response = await (await fetch(url, {
+        response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {'Content-Type': 'text/plain'}
-        })).text()
+        })
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText)
+        }
+        response = await response.text()
         console.log(JSON.parse(response))
         return JSON.parse(response)
     } catch (error) {
         console.error('Error fetching data:', error)
-        return null 
+        return null
     }
 }
 
@@ -26,6 +30,17 @@ document.getElementById('register-button').onclick = async function () {
     } else {
         alert('Error adding user: ' + message.message)
     }
+}
+
+document.getElementById('login-button').onclick = async function () {
+    let username = document.getElementById('login-username').value.trim()
+    let password = document.getElementById('login-password').value.trim()
+    if (username === '' || password === '') {
+        alert('Username and password cannot be empty')
+        return
+    }
+    // get list of notes
+    await getListNotes(username, password)
 }
 
 async function getListNotes(username, password) {
@@ -45,10 +60,10 @@ async function getListNotes(username, password) {
         for (let i = 0; i < notes.length; i++) {
             const j = notes[i];
             document.getElementById('notes-list').innerHTML += `
-            <div class="listNoteElement">
-            <div class="noteTitle">${j.name}</div>
-            <p>${j.dateModified}</p>
-            </div>
+                <div class="listNoteElement">
+                <div class="noteTitle">${j.name}</div>
+                <p>${j.dateModified}</p>
+                </div>
             `
         }
     } else {
@@ -68,7 +83,8 @@ async function addNote() {
 
 
 async function saveNote() {
-    if (note.editable) {
+    if (note.editable && !app.isSaving) {
+        app.isSaving = true
         note.version = app.buildVersion
         // prepare note
         let noteToUpload = JSON.parse(JSON.stringify(note))
@@ -76,13 +92,12 @@ async function saveNote() {
             file = noteToUpload.files[i];
             // if file exist
             if (file != null) {
-                // if file is not updated
-                if (file.updated == false) {
-                    // "remove" file from upload
+                if (file.updated == false && file.deleted != true) {
+                    // if file is not updated "remove" file from upload
                     noteToUpload.files[i] = null
-                } else {
-                    // if file is updated it isnt gonna be anymore
-                    note.files[i].updated = false
+                } else if (file.deleted == true) {
+                    // if file is deleted remove its data from upload
+                    delete noteToUpload.files[i].data
                 }
             }
         }
@@ -95,9 +110,48 @@ async function saveNote() {
             noteId: 0,
             note: JSON.stringify(noteToUpload)
         })
+        if (result.result !== 'success') {
+            alert('Error saving note: ' + result.message)
+            return false
+        }
+
+        // after response
+        let filesToDelete = []
+        for (let i = 0; i < note.files.length; i++) {
+            // remove updated flag from files
+            if (note.files[i] != null) {
+                note.files[i].updated = false
+            }
+            // schedule deletion of files / elements
+            if ((note.files[i] != null && note.files[i].deleted) || note.elements[i].deleted) {
+                filesToDelete.push(i)
+            }
+        }
+
+        // delete files / elements
+        for (let i = filesToDelete.length - 1; i >= 0; i--) {
+            const j = filesToDelete[i];
+            note.files.splice(j, 1)
+            note.elements.splice(j, 1)
+        }
+
+        // if any files were deleted refresh the note
+        if (filesToDelete.length > 0) {
+            render.all()
+        }
+        delete filesToDelete
+        app.isSaving = false
+
     } else {
-        alert('Note is not editable')
+        console.log('Note is not editable or is being saved')
     }
     return result
 }
 
+function decrypt(i) {
+    return atob(i)
+}
+
+function encrypt(i) {
+    return btoa(i)
+}
