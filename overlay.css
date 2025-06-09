@@ -1,0 +1,76 @@
+
+#login, #register, #setup, #listNotes{
+    width: 20rem;
+}
+
+
+
+#overlay{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+}
+
+
+.overlay{
+    translate: -50% -50%;
+    opacity: 0;
+    display: none;
+    position: absolute;
+    overflow: hidden;
+
+    background-color: var(--overlay-bg);
+    padding: var(--overlay-padding);
+    border-radius: var(--overlay-roundness);
+    box-shadow: 0 0 10px var(--overlay-bg);
+    backdrop-filter: blur(5px);
+}
+.overlay[show]{
+    opacity: 1;
+    display: inline-block;
+}
+.overlay > *:not(:last-child){
+    margin-bottom: var(--overlay-padding-elements);
+}
+
+.overlay-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--clr-text);
+    box-shadow: 0 -5rem 0 5rem var(--overlay-title-bg);
+    background-color: var(--overlay-title-bg);
+    padding-bottom: calc(var(--overlay-padding-elements) / 2);
+}
+
+
+.overlay-x{
+    position: absolute;
+    top: var(--overlay-padding);
+    right: var(--overlay-padding);
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--overlay-title-bg);
+    border-radius: 50%;
+    background-image: url(./icons/close.png);
+    background-size: cover;
+    background-position: center;
+    outline: .1rem solid transparent;
+}
+.overlay-x:hover{
+    scale: 1.1;
+    outline-color: var(--clr-text);
+}
+.overlay-x:active{
+    scale: 0.9;
+    filter: invert(1);
+}
+/* fix bottom padding in case of x */
+.overlay:has(.overlay-x){
+    padding-bottom: calc(var(--overlay-padding) - 1rem);
+}
+

@@ -9,13 +9,38 @@ noteContent.addEventListener('mousemove', function (event) {
     client.mouseY = event.clientY
 })
 
-function start() {
-    openOverlay('login')
+async function start() {
+    // check backend
+    if (app.backend = localStorage.getItem('backend')) {
+        if (await pingServer()) {
+            // if backend respond try log in
+            app.user.username = localStorage.getItem('username') || ''
+            app.user.password = localStorage.getItem('password') || ''
+            if (app.user.username != '' && app.user.password != '') {
+                if (await getListNotes(app.user.username, app.user.password) == false) {
+                    // if login fails
+                    openOverlay('login')
+                }
+            } else {
+                openOverlay('login')
+            }
+        } else {
+            app.backend = ''
+            openOverlay('setup')
+        }
+    } else {
+        app.backend = ''
+        openOverlay('setup')
+    }
 }
 
 
 function createNewNote(name) {
     note = new newNote(name, true)
+    openOverlay()
+    document.querySelector('body').setAttribute('in-overlay', 'false')
+    render.all()
+    addNote()
 }
 
 
@@ -31,11 +56,11 @@ function loadScript(path) {
 }
 
 function openOverlay(overlayName) {
-    for (let i = 0; i < document.getElementsByClassName('overlay-section').length; i++) {
-        document.getElementsByClassName('overlay-section')[i].removeAttribute('show')
+    for (let i = 0; i < document.getElementsByClassName('overlay').length; i++) {
+        document.getElementsByClassName('overlay')[i].removeAttribute('show')
     }
     if (overlayName) {
-        document.querySelector('#'+overlayName+'.overlay-section').setAttribute('show', '')
+        document.querySelector('#'+overlayName+'.overlay').setAttribute('show', '')
     }
 }
 
@@ -102,3 +127,10 @@ convert.getZoom = function () {
     // Get the zoom level from the app.zoom fraction
     return app.zoom[0]/app.zoom[1]
 }
+
+document.querySelectorAll('.overlay-x').forEach(function (element) {
+    if (element.onclick) return; // Prevent multiple bindings
+
+    // Add click event listener to close the overlay
+    element.onclick = function () {openOverlay()}
+})

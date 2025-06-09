@@ -24,9 +24,10 @@ document.getElementById('register-button').onclick = async function () {
         username: document.getElementById('register-username').value.trim(),
         password: document.getElementById('register-password').value.trim()
     })).result === 'success') {
-        alert('User added successfully')
+        alert('User added successfully, logging in...')
         document.getElementById('register-username').value = ''
         document.getElementById('register-password').value = ''
+        getListNotes(message.message.username, message.message.password)
     } else {
         alert('Error adding user: ' + message.message)
     }
@@ -43,6 +44,7 @@ document.getElementById('login-button').onclick = async function () {
     await getListNotes(username, password)
 }
 
+
 async function getListNotes(username, password) {
     openOverlay('listNotes')
     notes = await apiRequest({
@@ -54,9 +56,12 @@ async function getListNotes(username, password) {
     if (notes.result == 'success') {
         // save login data
         app.user.username = username
+        localStorage.setItem('username', username)
         app.user.password = password
+        localStorage.setItem('password', password)
         // parse notes
         notes = notes.message
+        document.getElementById('notes-list').innerHTML = ''
         for (let i = 0; i < notes.length; i++) {
             const j = notes[i];
             document.getElementById('notes-list').innerHTML += `
@@ -66,11 +71,14 @@ async function getListNotes(username, password) {
                 </div>
             `
         }
+        return true
     } else {
         // show error
         console.error('Error fetching notes:', notes.message)
+        return false
     }
 }
+
 
 async function addNote() {
     apiRequest({
@@ -154,4 +162,28 @@ function decrypt(i) {
 
 function encrypt(i) {
     return btoa(i)
+}
+
+async function pingServer(callback, errorCallback) {
+    const response = await apiRequest({
+        action: 'ping'
+    })
+    if (response && response.result === 'success') {
+        console.log('Server is reachable')
+        if (callback) callback()
+        return true
+    } else {
+        console.error('Server is not reachable:', response ? response.message : 'No response')
+        alert('Server is not reachable. Error: ' + (response ? response.message : 'No response'))
+        if (errorCallback) errorCallback()
+        return false
+    }
+}
+
+function deleteLocalStorage() {
+    for (const key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+            localStorage.removeItem(key)
+        }
+    }
 }

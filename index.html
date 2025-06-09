@@ -5,33 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>notes</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="overlay.css">
+    <link rel="stylesheet" href="note.css">
+    <link rel="stylesheet" href="edit.css">
     <link rel="icon" href="icon.png">
 </head>
-<body>
+<body in-overlay="true">
+    <div id="wallpaper">
+        <div class="wallpaper"></div>
+        <div class="wallpaper"></div>
+        <div class="wallpaper"></div>
+        <div class="wallpaper"></div>
+    </div>
     <div id="note-content"></div>
+    <div id="selection">
+        <div id="selection-popup"></div>
+    </div>
     <div id="tools">
         <div class="tools btn" id="add-text">T</div>
     </div>
     <div id="overlay">
         <div id="overlay-content">
-            <div class="overlay-section" id="login">
-                <h2>Log In</h2>
+
+            <div class="overlay" id="setup">
+                <div class="overlay-title">Setup</div>
+                <input type="text" id="setup-url" placeholder="backend URL" onchange="app.backend = this.value.trim()">
+                <div class="opposite">
+                    <div></div>
+                    <button id="ping-button" onclick="pingServer(function () {localStorage.setItem('backend', app.backend);openOverlay('login')})">Connect</button>
+                </div>
+            </div>
+
+            <div class="overlay" id="login">
+                <div class="overlay-title">Log In</div>
                 <input type="text" id="login-username" placeholder="Username">
                 <input type="password" id="login-password" placeholder="Password">
-                <button id="login-button">Log In</button>
-                <button id="register-link" onclick="openOverlay('register')">Register</button>
+                <div class="opposite">
+                    <button id="register-link" onclick="openOverlay('register')" class="secondary">Register</button>
+                    <button id="login-button">Log In</button>
+                </div>
             </div>
-            <div class="overlay-section" id="register">
-                <h2>Register</h2>
+
+            <div class="overlay" id="register">
+                <div class="overlay-title">Register</div>
                 <input type="text" id="register-username" placeholder="Username">
                 <input type="password" id="register-password" placeholder="Password">
-                <button id="register-button">Register</button>
-                <button id="login-link" onclick="openOverlay('login')">Log In</button>
+                <div class="opposite">
+                    <button id="login-link" onclick="openOverlay('login')" class="secondary">Log In</button>
+                    <button id="register-button">Register</button>
+                </div>
             </div>
-            <div class="overlay-section" id="listNotes">
-                <h2>Notes</h2>
+
+            <div class="overlay" id="listNotes">
+                <div class="overlay-title">Notes</div>
                 <div id="notes-list"></div>
-                <button id="create-note">Create New Note</button>
+                <button id="create-note" onclick="createNewNote('new note')">Create New Note</button>
+                <div class="overlay-x" onclick="openOverlay('login')"></div>
             </div>
         </div>
     </div>

@@ -1,3 +1,23 @@
+:root {
+    --clr: #ffffff;
+    --clr-desat: #ffffff3b;
+    --clr-secondary: #838383;
+    --clr-text: #ffffff;
+    --clr-text-alt: #000000;
+
+    --overlay-bg: #d6d6d63b;
+    --overlay-padding: 1.5rem;
+    --overlay-roundness: 1.5rem;
+    --overlay-padding-elements: 1rem;
+    --overlay-title-bg: #d6d6d63b;
+
+    --ui-elements-roundedness: .5rem;
+
+    --transition-duration: 0.2s;
+    --transition-duration-scale-button: 0.1s;
+}
+
+
 
 
 *{
@@ -6,7 +26,39 @@
     box-sizing: border-box;
     outline: none;
     border: none;
+    color: var(--clr-text);
+    transition: all var(--transition-duration) ease-in-out, scale var(--transition-duration-scale-button) cubic-bezier(.18,.89,.32,1.28);
 }
+
+.opposite{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+body[in-overlay="true"] > *:not(#overlay){
+    opacity: 0;
+    pointer-events: none;
+}
+
+body[in-overlay="true"] > #wallpaper{
+    opacity: 1;
+    pointer-events: all;
+}
+
+
+
+
+#wallpaper{
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 0% 0%, #023437, transparent), radial-gradient(circle at 50% 50%, #360751, transparent), radial-gradient(circle at 100% 100%, #262500, transparent), radial-gradient(circle at 0% 100%, #400, transparent), radial-gradient(circle at 100% 0%, #045301, transparent);
+}
+
+
+
 
 #tools{
     position: absolute;
@@ -15,78 +67,51 @@
     width: 1rem;
     height: 100%;
     background-color: #973636;
-    color: #fff;
+    color: var(--clr-text);
 }
-#note-content{
-    position: absolute;
-    top: 0;
-    left: 0;
+
+
+
+
+input[type="text"], input[type="password"], button{
+    padding: 0.5rem;
+    border-radius: var(--ui-elements-roundedness);
+    border: .15rem solid var(--clr-desat);
+    background-color: var(--clr-bg-element);
+    color: var(--clr-text);
+}
+input[type="text"], input[type="password"]{
     width: 100%;
-    height: 100%;
-    background-color: #000000;
 }
-
-
-
-
-.popup-section{
-    display: flex;
+button{
+    cursor: pointer;
+    background-color: var(--clr-desat);
+    border: .15rem solid transparent;
 }
-
-
-
-.element{
-    position: absolute;
-    box-sizing: content-box;
+button.secondary{
+    background-color: transparent;
+    border-color: var(--clr-desat);
+    color: var(--clr-text);
 }
-
-.element{
-    color: #fff;
+input[type="text"]:focus, input[type="password"]:focus, button:focus{
+    border-color: var(--clr);
+    background-color: var(--clr-desat);
 }
-.element pre {position: relative;}
-
-.element:has(pre:focus){
-    outline: 1px solid #fff;
-    outline-offset: .5rem;
+input[type="text"]:hover, input[type="password"]:hover{
+    border-color: var(--clr);
 }
-
-.popup{
-    position: absolute;
-    background-color: #fff;
-    color: #000;
-    padding: .45rem;
-    box-shadow: 0 0 10px #00000080;
-    left: 50%;
-    top: -0.5rem;
-    translate: -50% 0;
-    z-index: 0;
-    transition: all 0.2s ease-in-out;
-    opacity: 0;
-    scale: 0;
+button:hover{
+    border-color: var(--clr);
+    scale: 1.05;
 }
-.element:hover .popup, .element:has(pre:focus) .popup{
-    translate: -50% -100%;
-    scale: 1;
-    opacity: 1;
+button:active{
+    background-color: var(--clr);
+    border-color: transparent;
+    color: var(--clr-text-alt);
+    scale: 0.95;
 }
-
-
-
-#overlay{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 1;
-}
-
-
-.overlay-section{
-    translate: -50% -50%;
-    opacity: 0;
-    display: none;
-    position: absolute;
-}
-.overlay-section[show]{
-    opacity: 1;
-    display: inline-block;
+button.secondary:active{
+    background-color: var(--clr-desat);
+    border-color: var(--clr);
+    color: var(--clr-text);
 }

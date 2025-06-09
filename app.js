@@ -2,7 +2,7 @@ app = {
     versionName: 'ilham',
     buildVersion: 1,
     version: '0.1.0',
-    backend: 'http://localhost:8080/notes',
+    backend: '',
     user: {
         username: '',
         password: ''
