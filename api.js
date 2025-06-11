@@ -83,7 +83,7 @@ async function getListNotes(username, password) {
                 <tr class="listNoteElement" onclick="getFullNote(${i})">
                 <td class="noteTitle">${j.name}</td>
                 <td class="noteActions">
-                    <button class="noteActionButton" onclick="getFullNote(${j.id}); deleteNote(${j.id}); event.stopPropagation();">Delete</button>
+                    <button class="noteActionButton" onclick="deleteNote(${i}); event.stopPropagation();">Delete</button>
                 </td>
                 <td class="dateCell">${j.dateModified}</td>
                 <td class="dateCell">${j.dateCreated}</td>
@@ -127,6 +127,25 @@ async function addNote() {
         password: app.user.password,
         note: JSON.stringify(note)
     })
+}
+
+
+async function deleteNote(noteId) {
+    if (confirm('Are you sure you want to delete this note?')) {
+        response = await apiRequest({
+            action: 'deleteNote',
+            username: app.user.username,
+            password: app.user.password,
+            noteId: noteId
+        })
+        if (response.result == 'success') {
+            console.log('Note deleted successfully')
+            getListNotes(app.user.username, app.user.password)
+        } else {
+            console.error('Error deleting note:', response.message)
+            alert('Error deleting note: ' + response.message)
+        }
+    }
 }
 
 
