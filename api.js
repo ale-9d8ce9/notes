@@ -41,7 +41,9 @@ document.getElementById('login-button').onclick = async function () {
         return
     }
     // get list of notes
-    await getListNotes(username, password)
+    if (!await getListNotes(username, password)) {
+        openOverlay('login')
+    }
 }
 
 
@@ -61,14 +63,31 @@ async function getListNotes(username, password) {
         localStorage.setItem('password', password)
         // parse notes
         notes = notes.message
-        document.getElementById('notes-list').innerHTML = ''
+        document.getElementById('notes-list').innerHTML = `
+            <tr>
+                <th>Name</th>
+                <th></th>
+                <th>Date Modified</th>
+                <th>Date Created</th>
+            </tr>`
         for (let i = 0; i < notes.length; i++) {
             const j = notes[i];
+
+            j.date = (new Date(j.dateModified))
+            j.dateModified = `<div class="dateDate">${j.date.toLocaleDateString()}</div><div class="dateTime">${j.date.toLocaleTimeString()}</div>`
+            j.date = (new Date(j.dateCreated))
+            j.dateCreated = `<div class="dateDate">${j.date.toLocaleDateString()}</div><div class="dateTime">${j.date.toLocaleTimeString()}</div>`
+
+
             document.getElementById('notes-list').innerHTML += `
-                <div class="listNoteElement">
-                <div class="noteTitle">${j.name}</div>
-                <p>${j.dateModified}</p>
-                </div>
+                <tr class="listNoteElement" onclick="getFullNote(${i})">
+                <td class="noteTitle">${j.name}</td>
+                <td class="noteActions">
+                    <button class="noteActionButton" onclick="getFullNote(${j.id}); deleteNote(${j.id}); event.stopPropagation();">Delete</button>
+                </td>
+                <td class="dateCell">${j.dateModified}</td>
+                <td class="dateCell">${j.dateCreated}</td>
+                </tr>
             `
         }
         return true
@@ -79,6 +98,27 @@ async function getListNotes(username, password) {
     }
 }
 
+
+async function getFullNote(noteId) {
+    response = await apiRequest({
+        action: 'getFullNote',
+        username: app.user.username,
+        password: app.user.password,
+        noteId: noteId
+    })
+    if (response.result == 'success') {
+        console.log('Note fetched successfully:', response.message)
+        response = response.message
+        note = new newNote(response.name, false, response.elements, response.files)
+        note.version = response.version
+        note.editable = true
+        note.load()
+        return true
+    } else {
+        console.error('Error fetching note:', note.message)
+        return false
+    }
+}
 
 async function addNote() {
     apiRequest({

@@ -7,6 +7,7 @@ app = {
         username: '',
         password: ''
     },
+    noteId: -1,
     zoom: [1, 1],
     isSaving: false,
 

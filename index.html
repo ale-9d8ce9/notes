@@ -23,6 +23,10 @@
     </div>
     <div id="tools">
         <div class="tools btn" id="add-text">T</div>
+        <div class="tools btn" id="add-image">I</div>
+        <div class="tools btn" id="close-note">
+            <img src="icons/logout.svg" alt="">
+        </div>
     </div>
     <div id="overlay">
         <div id="overlay-content">
@@ -58,7 +62,9 @@
 
             <div class="overlay" id="listNotes">
                 <div class="overlay-title">Notes</div>
-                <div id="notes-list"></div>
+                <div class="table-container">
+                    <table id="notes-list"></table>
+                </div>
                 <button id="create-note" onclick="createNewNote('new note')">Create New Note</button>
                 <div class="overlay-x" onclick="openOverlay('login')"></div>
             </div>

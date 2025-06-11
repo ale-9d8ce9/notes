@@ -90,6 +90,19 @@ function imageToBase64(imageFile, callback) {
 }
 
 
+document.getElementById('close-note').onclick = function () {
+    saveNote().then(function () {
+        noteContent.innerHTML = ''
+        note = null
+        document.querySelector('body').setAttribute('in-overlay', 'true')
+        openOverlay('listNotes')
+    }
+    ).catch(function (error) {
+        console.error('Error saving note:', error)
+    })
+}
+
+
 
 convert.toPx = function (values) {
     // Convert the values to pixels based on the current zoom level
@@ -127,6 +140,7 @@ convert.getZoom = function () {
     // Get the zoom level from the app.zoom fraction
     return app.zoom[0]/app.zoom[1]
 }
+
 
 document.querySelectorAll('.overlay-x').forEach(function (element) {
     if (element.onclick) return; // Prevent multiple bindings

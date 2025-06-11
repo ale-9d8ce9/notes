@@ -41,10 +41,13 @@ class newNote {
     }
     load() {
         this.versionCheck()
+        render.all()
+        document.querySelector('body').setAttribute('in-overlay', 'false')
+        openOverlay()
     }
     versionCheck() {
         if (this.version != app.buildVersion) {
-            loadScript('render/' + app.history[this.version].versionName + '.js')
+            loadScript('render/' + app.history[app.buildVersion].versionName + '.js')
             this.editable = false
         }
     }

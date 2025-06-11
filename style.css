@@ -6,15 +6,17 @@
     --clr-text-alt: #000000;
 
     --overlay-bg: #d6d6d63b;
-    --overlay-padding: 1.5rem;
+    --overlay-padding: 1rem;
     --overlay-roundness: 1.5rem;
     --overlay-padding-elements: 1rem;
-    --overlay-title-bg: #d6d6d63b;
+    --overlay-title-bg: #d6d6d628;
 
-    --ui-elements-roundedness: .5rem;
+    --ui-elements-roundedness: .7rem;
+    --ui-elements-border-width: .15rem;
+    --ui-elements-padding: .5rem;
 
     --transition-duration: 0.2s;
-    --transition-duration-scale-button: 0.1s;
+    --transition-duration-button: 0.1s;
 }
 
 
@@ -27,7 +29,7 @@
     outline: none;
     border: none;
     color: var(--clr-text);
-    transition: all var(--transition-duration) ease-in-out, scale var(--transition-duration-scale-button) cubic-bezier(.18,.89,.32,1.28);
+    transition: all var(--transition-duration) ease;
 }
 
 .opposite{
@@ -74,9 +76,9 @@ body[in-overlay="true"] > #wallpaper{
 
 
 input[type="text"], input[type="password"], button{
-    padding: 0.5rem;
+    padding: var(--ui-elements-padding);
     border-radius: var(--ui-elements-roundedness);
-    border: .15rem solid var(--clr-desat);
+    border: var(--ui-elements-border-width) solid var(--clr-desat);
     background-color: var(--clr-bg-element);
     color: var(--clr-text);
 }
@@ -86,7 +88,8 @@ input[type="text"], input[type="password"]{
 button{
     cursor: pointer;
     background-color: var(--clr-desat);
-    border: .15rem solid transparent;
+    border: var(--ui-elements-border-width) solid transparent;
+    transition: all var(--transition-duration-button) ease;
 }
 button.secondary{
     background-color: transparent;
@@ -114,4 +117,38 @@ button.secondary:active{
     background-color: var(--clr-desat);
     border-color: var(--clr);
     color: var(--clr-text);
+}
+
+
+
+.table-container{
+    border-radius: var(--ui-elements-roundedness);
+    border: var(--ui-elements-border-width) solid var(--clr-desat);
+    overflow: hidden;
+}
+table{
+    border-collapse: collapse;
+}
+td{
+    border: var(--ui-elements-border-width) solid var(--clr-desat);
+}
+td:first-child{border-left: none;}
+td:last-child{border-right: none;}
+tr:last-child td{border-bottom: none;}
+tbody:nth-of-type(2) td{border-top: none;}
+th{
+    background-color: var(--clr-desat);
+    color: var(--clr-text);
+    font-weight: bold;
+    text-align: left;
+    font-size: 1.1rem;
+}
+td, th{
+    padding: var(--ui-elements-padding);
+}
+.noteTitle{
+    min-width: 8rem;
+}
+.dateCell, th{
+    white-space: nowrap;
 }
