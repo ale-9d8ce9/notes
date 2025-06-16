@@ -112,6 +112,7 @@ async function getFullNote(noteId) {
         note = new newNote(response.name, false, response.elements, response.files)
         note.version = response.version
         note.editable = true
+        document.getElementById('note-title').value = note.name
         note.load()
         return true
     } else {

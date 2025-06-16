@@ -1,12 +1,18 @@
 
-
-#note-content{
-    position: absolute;
+#note-wrapper{
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+}
+#note-content{
+    position: absolute;
+    top: 0;
+    left: 0;
     background-color: #000000;
+    transition: 0s;
 }
 
 
@@ -14,11 +20,10 @@
     position: absolute;
     box-sizing: content-box;
     color: #fff;
+    display: flex;
     translate: -50% -50%;
 }
-.element pre {position: relative;}
 
-.element:has(pre:focus){
-    outline: 1px solid #fff;
-    outline-offset: .5rem;
+.element img{
+    pointer-events: none;
 }

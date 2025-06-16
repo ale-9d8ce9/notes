@@ -14,6 +14,18 @@
     --ui-elements-roundedness: .7rem;
     --ui-elements-border-width: .15rem;
     --ui-elements-padding: .5rem;
+    --ui-elements-font-size: 1rem;
+
+    --ui-icon-size: 1.5rem;
+    --ui-icon-size-small: 1.2rem;
+
+    --status-bar-height: 2.5rem;
+    --status-bar-height-big: 3rem;
+
+    --selection-border-width: .2rem;
+    --selection-border-offset: .4rem;
+    --selection-border-color1: #ccdd6f;
+    --selection-border-color2: #34c258;
 
     --transition-duration: 0.2s;
     --transition-duration-button: 0.1s;
@@ -30,6 +42,7 @@
     border: none;
     color: var(--clr-text);
     transition: all var(--transition-duration) ease;
+    font-size: var(--ui-elements-font-size);
 }
 
 .opposite{
@@ -72,6 +85,12 @@ body[in-overlay="true"] > #wallpaper{
     color: var(--clr-text);
 }
 
+
+.icon{
+    height: 100%;
+    aspect-ratio: 1;
+    cursor: pointer;
+}
 
 
 

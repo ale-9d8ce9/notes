@@ -40,6 +40,7 @@ edit.select = function (i) {
     edit.selection.element.style.height = pos.height + 'px'
     
     edit.selection.element.classList.add('show')
+    app.elementSelected = i
 }
 
 
@@ -75,7 +76,7 @@ edit.selection.popup.text = class {
             color: this.getColor()
         }
         this.string = `
-            <div class="popup-content">
+            <div id="selection-popup">
                 ${this.sections.align}
                 ${this.sections.font}
                 ${this.sections.size}
@@ -146,3 +147,7 @@ edit.selection.popup.text = class {
         return `<div class="popup-section">${this.inputString}</div>`
     }
 }
+
+
+
+

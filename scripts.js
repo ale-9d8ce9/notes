@@ -109,14 +109,14 @@ convert.toPx = function (values) {
     // innerWidth is always used so it doesnt stretch and is independent from the window aspect ratio
     values = JSON.parse(JSON.stringify(values))
     
-    values.x ? values.x = values.x * window.innerWidth * convert.getZoom() : undefined
-    values.y ? values.y = values.y * window.innerWidth * convert.getZoom() : undefined
-    values.x1 ? values.x1 = values.x1 * window.innerWidth * convert.getZoom() : undefined
-    values.y1 ? values.y1 = values.y1 * window.innerWidth * convert.getZoom() : undefined
-    values.x2 ? values.x2 = values.x2 * window.innerWidth * convert.getZoom() : undefined
-    values.y2 ? values.y2 = values.y2 * window.innerWidth * convert.getZoom() : undefined
-    values.width ? values.width = values.width * window.innerWidth * convert.getZoom() : undefined
-    values.height ? values.height = values.height * window.innerWidth * convert.getZoom() : undefined
+    values.x ? values.x = values.x * window.innerWidth * note.zoom : undefined
+    values.y ? values.y = values.y * window.innerWidth * note.zoom : undefined
+    values.x1 ? values.x1 = values.x1 * window.innerWidth * note.zoom : undefined
+    values.y1 ? values.y1 = values.y1 * window.innerWidth * note.zoom : undefined
+    values.x2 ? values.x2 = values.x2 * window.innerWidth * note.zoom : undefined
+    values.y2 ? values.y2 = values.y2 * window.innerWidth * note.zoom : undefined
+    values.width ? values.width = values.width * window.innerWidth * note.zoom : undefined
+    values.height ? values.height = values.height * window.innerWidth * note.zoom : undefined
     return values
 }
 
@@ -136,10 +136,6 @@ convert.toPoints = function (values) {
     return values
 }
 
-convert.getZoom = function () {
-    // Get the zoom level from the app.zoom fraction
-    return app.zoom[0]/app.zoom[1]
-}
 
 
 document.querySelectorAll('.overlay-x').forEach(function (element) {

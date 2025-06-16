@@ -8,8 +8,8 @@ app = {
         password: ''
     },
     noteId: -1,
-    zoom: [1, 1],
     isSaving: false,
+    elementSelected:-1,
 
     history: [
         {

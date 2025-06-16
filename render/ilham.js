@@ -1,4 +1,7 @@
-render = {popup: {}}
+render = {
+    popup: {},
+    gesture: {scale: 1, posX: 0, posY: 0}
+}
 
 render.all = function () {
     for (let i = 0; i < note.elements.length; i++) {
@@ -76,3 +79,41 @@ render.container = function (i, elementType) {
     // click to select
     render.element.setAttribute('onmousedown', 'edit.select(' + i + ')')
 }
+
+
+
+// gesture to move / scale
+
+render.gesture.render = () => {
+    window.requestAnimationFrame(() => {
+        render.gesture.noteContentElement.style.transform = `translate(${render.gesture.posX}px, ${render.gesture.posY}px) scale(${render.gesture.scale})`
+        app.elementSelected != -1 ? edit.select(app.elementSelected) : undefined
+    })
+}
+
+render.gesture.wheel = function (event) {
+    event.preventDefault()
+
+    if (event.ctrlKey) {
+        
+        render.gesture.scale -= event.deltaY * render.gesture.scale * 0.008
+        render.gesture.scale < 0.1 ? render.gesture.scale = 0.1 : undefined
+    } else {
+        render.gesture.posX -= event.deltaX / render.gesture.scale * 2
+        render.gesture.posY -= event.deltaY / render.gesture.scale * 2
+    }
+    
+    render.gesture.noteContentElement.style.transformOrigin = `${window.client.mouseX - render.gesture.posX}px ${window.client.mouseY - render.gesture.posY}px`
+    render.gesture.noteContentElement.style.transform = `translate(${render.gesture.posX}px, ${render.gesture.posY}px) scale(${render.gesture.scale})`
+    //render.gesture.render()
+}
+
+
+
+render.gesture.noteWrapperElement = document.querySelector('#note-wrapper')
+render.gesture.noteContentElement = document.querySelector('#note-content')
+render.gesture.selectionElement = document.querySelector('#selection')
+
+render.gesture.noteWrapperElement.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+render.gesture.selectionElement.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+

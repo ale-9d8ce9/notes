@@ -1,0 +1,29 @@
+
+#status-bar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    align-items: center;
+    padding: var(--ui-elements-padding);
+    height: var(--status-bar-height);
+}
+
+#status-bar > div {
+    display: inline-block;
+    height: 100%;
+}
+/*
+#status-bar > div > * {
+    display: inline-flex;
+    height: 100%;
+}
+
+#status-bar #note-title:not(:hover,:focus-visible), #status-bar:has(:hover, :focus-within) #note-title {
+    font-size: calc(var(--ui-elements-font-size) * 0.8);
+}
+#status-bar:has(:hover, :focus-within) {
+    height: var(--status-bar-height-big);
+}
+

@@ -40,6 +40,7 @@ class newNote {
         }
     }
     load() {
+        this.zoom = 1
         this.versionCheck()
         render.all()
         document.querySelector('body').setAttribute('in-overlay', 'false')

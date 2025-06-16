@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="overlay.css">
     <link rel="stylesheet" href="note.css">
+    <link rel="stylesheet" href="statusbar.css">
     <link rel="stylesheet" href="edit.css">
     <link rel="icon" href="icon.png">
 </head>
@@ -17,15 +18,20 @@
         <div class="wallpaper"></div>
         <div class="wallpaper"></div>
     </div>
-    <div id="note-content"></div>
-    <div id="selection">
-        <div id="selection-popup"></div>
+    <div id="note-wrapper">
+        <div id="note-content"></div>
     </div>
+    <div id="selection"></div>
     <div id="tools">
         <div class="tools btn" id="add-text">T</div>
         <div class="tools btn" id="add-image">I</div>
-        <div class="tools btn" id="close-note">
-            <img src="icons/logout.svg" alt="">
+    </div>
+    <div id="status-bar" class="opposite">
+        <div>
+            <input type="text" id="note-title" placeholder="Note Title" oninput="note.name = this.value.trim()">
+        </div>
+        <div>
+            <img src="icons/logout.svg" id="close-note" class="icon">
         </div>
     </div>
     <div id="overlay">
