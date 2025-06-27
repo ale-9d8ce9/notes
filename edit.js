@@ -2,10 +2,13 @@ edit = {
     vars:{},
     text:{},
     image:{},
+    move:{},
     selection:{popup:{}}
 }
 edit.selection.element = document.getElementById('selection')
 
+
+edit.selection.element.onmousedown = function () {edit.move.start()}
 
 document.getElementById('add-text').onclick = function () {
     noteContent.onclick = edit.text.add
@@ -45,19 +48,40 @@ edit.select = function (i) {
 
 
 edit.selection.popup.create = function (i) {
-    // If the popup already exists set the variables to the existing popup
     edit.selection.element = document.getElementById('selection')
-    edit.selection.element.style.left = note.elements[i].style.x + 'px'
-    edit.selection.element.style.top = note.elements[i].style.y + 'px'
     switch (note.elements[i].type) {
         case 'text':
             edit.selection.element.innerHTML = (new edit.selection.popup.text(i)).string
             break
     
         default:
+            edit.selection.element.innerHTML = ''
             break
     }
-    edit.selection.element.innerHTML = (new edit.selection.popup.text(i)).string
+}
+
+
+edit.move.start = function () {
+    edit.move.mouseStartX = window.client.mouseX
+    edit.move.mouseStartY = window.client.mouseY
+    edit.move.elementStartX = parseFloat(document.getElementsByClassName('element')[app.elementSelected].style.left)
+    edit.move.elementStartY = note.elements[app.elementSelected].y
+    document.getElementsByClassName('element')[app.elementSelected].classList.add('no-transition')
+    body.onmousemove = function () {edit.move.move(event)}
+    body.onmouseup = edit.move.stop
+}
+edit.move.move = function (event) {
+    let i = app.elementSelected
+    console.log(convert.toPx(edit.move.elementStartX) + (event.clientX - edit.move.mouseStartX));
+    
+    document.getElementsByClassName('element')[i].style.left = (edit.move.elementStartX + (event.clientX - edit.move.mouseStartX) * note.zoom) + 'px'
+    //note.elements[i].y = event.clientY * edit.move.elementStartY / edit.move.mouseStartY
+    //render.all()
+}
+edit.move.stop = function () {
+    document.getElementsByClassName('element')[app.elementSelected].classList.remove('no-transition')
+    body.onmousemove = function () {}
+    body.onmouseup = function () {}
 }
 
 edit.selection.popup.text = class {

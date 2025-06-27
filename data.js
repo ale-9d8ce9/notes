@@ -1,18 +1,25 @@
 class newNote {
-    constructor(name, isNew, elements, files) {
-        this.name = name
+    constructor(obj) {
+        this.name = obj.name
         this.elements = []
         this.files = []
 
         this.dateModified = (new Date()).toISOString()
 
-        if (isNew) {
+        if (obj.isNew) {
             this.dateCreated = (new Date()).toISOString()
             this.version = app.buildVersion
             this.editable = true
+            this.position = {
+                x: 0,
+                y: 0,
+                scale: 1
+            }
         } else {
-            this.elements = elements
-            this.files = files
+            this.position = obj.position
+            this.elements = obj.elements
+            this.files = obj.files
+            this.version = obj.version
         }
     }
     addElement(type, data, size) {
@@ -40,7 +47,6 @@ class newNote {
         }
     }
     load() {
-        this.zoom = 1
         this.versionCheck()
         render.all()
         document.querySelector('body').setAttribute('in-overlay', 'false')
@@ -50,6 +56,8 @@ class newNote {
         if (this.version != app.buildVersion) {
             loadScript('render/' + app.history[app.buildVersion].versionName + '.js')
             this.editable = false
+        } else {
+            this.editable = true
         }
     }
 }

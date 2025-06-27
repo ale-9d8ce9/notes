@@ -1,9 +1,10 @@
 render = {
     popup: {},
-    gesture: {scale: 1, posX: 0, posY: 0}
+    gesture: {}
 }
 
 render.all = function () {
+    render.gesture.noteContentElement.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
     for (let i = 0; i < note.elements.length; i++) {
         const element = note.elements[i]
         switch (element.type) {
@@ -83,29 +84,30 @@ render.container = function (i, elementType) {
 
 
 // gesture to move / scale
-
-render.gesture.render = () => {
-    window.requestAnimationFrame(() => {
-        render.gesture.noteContentElement.style.transform = `translate(${render.gesture.posX}px, ${render.gesture.posY}px) scale(${render.gesture.scale})`
-        app.elementSelected != -1 ? edit.select(app.elementSelected) : undefined
-    })
-}
-
 render.gesture.wheel = function (event) {
     event.preventDefault()
 
     if (event.ctrlKey) {
+        let initialScale = note.position.scale
+
+        note.position.scale -= event.deltaY * note.position.scale * 0.008
+        note.position.scale < 0.1 ? note.position.scale = 0.1 : undefined
+        note.position.scale > 10 ? note.position.scale = 10 : undefined
         
-        render.gesture.scale -= event.deltaY * render.gesture.scale * 0.008
-        render.gesture.scale < 0.1 ? render.gesture.scale = 0.1 : undefined
+        let mousex = event.clientX - render.gesture.noteContentElement.getBoundingClientRect().left
+        let mousey = event.clientY - render.gesture.noteContentElement.getBoundingClientRect().top
+
+        note.position.x -= mousex * (note.position.scale - initialScale)
+        note.position.y -= mousey * (note.position.scale - initialScale)
     } else {
-        render.gesture.posX -= event.deltaX / render.gesture.scale * 2
-        render.gesture.posY -= event.deltaY / render.gesture.scale * 2
+        note.position.x -= event.deltaX * (note.position.scale ** 0.1 * 2)
+        note.position.y -= event.deltaY * (note.position.scale ** 0.1 * 2)
     }
     
-    render.gesture.noteContentElement.style.transformOrigin = `${window.client.mouseX - render.gesture.posX}px ${window.client.mouseY - render.gesture.posY}px`
-    render.gesture.noteContentElement.style.transform = `translate(${render.gesture.posX}px, ${render.gesture.posY}px) scale(${render.gesture.scale})`
-    //render.gesture.render()
+    window.requestAnimationFrame(() => {
+        render.gesture.noteContentElement.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
+        app.elementSelected != -1 ? edit.select(app.elementSelected) : undefined
+    })
 }
 
 

@@ -1,3 +1,4 @@
+
 async function apiRequest(request) {
     try {
         let url = app.backend + '?action=' + request.action
@@ -109,9 +110,14 @@ async function getFullNote(noteId) {
     if (response.result == 'success') {
         console.log('Note fetched successfully:', response.message)
         response = response.message
-        note = new newNote(response.name, false, response.elements, response.files)
-        note.version = response.version
-        note.editable = true
+        note = new newNote({
+            name: response.name,
+            isNew: false,
+            position: response.position,
+            elements: response.elements,
+            files: response.files,
+            version: response.version
+        })
         document.getElementById('note-title').value = note.name
         note.load()
         return true
