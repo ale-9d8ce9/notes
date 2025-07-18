@@ -1,6 +1,7 @@
 window.onload = start
 const body = document.querySelector('body')
 const noteContent = document.getElementById('note-content')
+const noteWrapper = document.getElementById('note-wrapper')
 client = {mouseX: 0, mouseY: 0}
 convert = {}
 
@@ -89,6 +90,13 @@ function imageToBase64(imageFile, callback) {
     }
 }
 
+getMousePosition = function (event) {
+    const rect = noteContent.getBoundingClientRect()
+    return {
+        x: (event.clientX - rect.left) / note.position.scale,
+        y: (event.clientY - rect.top) / note.position.scale
+    }
+}
 
 document.getElementById('close-note').onclick = function () {
     saveNote().then(function () {

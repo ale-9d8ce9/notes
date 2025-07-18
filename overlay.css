@@ -23,8 +23,8 @@
     background-color: var(--overlay-bg);
     padding: var(--overlay-padding);
     border-radius: var(--overlay-roundness);
-    box-shadow: 0 0 10px var(--overlay-bg);
-    backdrop-filter: blur(5px);
+    box-shadow: var(--overlay-shadow);
+    backdrop-filter: blur(var(--overlay-blur));
 }
 .overlay[show]{
     opacity: 1;

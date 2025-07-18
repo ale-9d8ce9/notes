@@ -1,17 +1,37 @@
 :root {
-    --clr: #ffffff;
-    --clr-desat: #ffffff3b;
-    --clr-secondary: #838383;
-    --clr-text: #ffffff;
-    --clr-text-alt: #000000;
+    --note-bg: hsl(0, 0%, 0%);
+    --page-bg: var(--note-bg);
 
-    --overlay-bg: #d6d6d63b;
+    --clr: hsl(261.14, 94.36%, 73.38%);
+    --clr-desat: hsla(264.87, 100%, 86%, 0.3);
+    --clr-secondary: hsl(0, 0%, 51%);
+    --clr-text: hsl(0, 0%, 100%);
+    --clr-text-alt: hsl(0, 0%, 0%);
+
+    --overlay-bg: hsla(250.97, 68.28%, 73.2%, 0.32);
     --overlay-padding: 1rem;
     --overlay-roundness: 1.5rem;
     --overlay-padding-elements: 1rem;
-    --overlay-title-bg: #d6d6d628;
+    --overlay-title-bg: hsla(253.68, 76.68%, 69.98%, 0.51);
+    --overlay-blur: 1rem;
+    --overlay-shadow: 0 0 15px 5px hsla(0, 0%, 0%, 0.231), 0 4px 25px 0 hsla(0, 0%, 100%, 0.25) inset;
 
-    --ui-elements-roundedness: .7rem;
+    --sidebar-bg: hsla(0, 0%, 43%, 0.228);
+    --sidebar-bg-hover: hsla(0, 0%, 20%, 0.211);
+    --sidebar-padding: 1rem;
+    --sidebar-icon-size: 1.5rem;
+    --sidebar-icon-padding: .7rem;
+    --sidebar-icon-roundness: 10rem;
+    --sidebar-blur: .2rem;
+    --sidebar-blur-hover: calc(var(--sidebar-blur) * 3);
+    --sidebar-shadow:
+        0 0 10px 0 hsla(0, 0%, 0%, 0.502),
+        0 0 5px 0 hsla(0, 0%, 56%, 0.259) inset;
+    --sidebar-shadow-hover:
+        0 0 15px 0 hsla(0, 0%, 0%, 0.631),
+        0 0 10px 0 hsla(0, 0%, 79%, 0.502) inset;
+
+    --ui-elements-roundness: .7rem;
     --ui-elements-border-width: .15rem;
     --ui-elements-padding: .5rem;
     --ui-elements-font-size: 1rem;
@@ -19,13 +39,14 @@
     --ui-icon-size: 1.5rem;
     --ui-icon-size-small: 1.2rem;
 
-    --status-bar-height: 2.5rem;
-    --status-bar-height-big: 3rem;
+    --statusbar-height: 2.5rem;
+    --statusbar-height-big: 3rem;
+    --statusbar-bg: hsl(0, 0%, 11%);
 
     --selection-border-width: .2rem;
     --selection-border-offset: .4rem;
-    --selection-border-color1: #ccdd6f;
-    --selection-border-color2: #34c258;
+    --selection-border-color1: hsl(69, 62%, 65%);
+    --selection-border-color2: hsl(135, 58%, 48%);
 
     --transition-duration: 0.2s;
     --transition-duration-button: 0.1s;
@@ -44,6 +65,7 @@
     transition: all var(--transition-duration) ease;
     font-size: var(--ui-elements-font-size);
     user-select: none;
+    --webkit-user-select: none;
 }
 
 
@@ -62,6 +84,7 @@ body{
     position: absolute;
     width: 100%;
     height: 100%;
+    background-color: var(--page-bg);
 }
 
 body[in-overlay="true"] > *:not(#overlay){
@@ -82,32 +105,21 @@ body[in-overlay="true"] > #wallpaper{
     inset: 0;
     opacity: 0;
     pointer-events: none;
-    background: radial-gradient(circle at 0% 0%, #023437, transparent), radial-gradient(circle at 50% 50%, #360751, transparent), radial-gradient(circle at 100% 100%, #262500, transparent), radial-gradient(circle at 0% 100%, #400, transparent), radial-gradient(circle at 100% 0%, #045301, transparent);
+    background-image: url(./bg.svg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: brightness(0.7);
+    /* filter: blur(5px); */
+    /* background: radial-gradient(circle at 0% 0%, #023437, transparent), radial-gradient(circle at 50% 50%, #360751, transparent), radial-gradient(circle at 100% 100%, #262500, transparent), radial-gradient(circle at 0% 100%, #400, transparent), radial-gradient(circle at 100% 0%, #045301, transparent); */
 }
 
-
-#tools{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1rem;
-    height: 100%;
-    background-color: #973636;
-    color: var(--clr-text);
-}
-
-
-.icon{
-    height: 100%;
-    aspect-ratio: 1;
-    cursor: pointer;
-}
 
 
 
 input[type="text"], input[type="password"], button{
     padding: var(--ui-elements-padding);
-    border-radius: var(--ui-elements-roundedness);
+    border-radius: var(--ui-elements-roundness);
     border: var(--ui-elements-border-width) solid var(--clr-desat);
     background-color: var(--clr-bg-element);
     color: var(--clr-text);
@@ -152,7 +164,7 @@ button.secondary:active{
 
 
 .table-container{
-    border-radius: var(--ui-elements-roundedness);
+    border-radius: var(--ui-elements-roundness);
     border: var(--ui-elements-border-width) solid var(--clr-desat);
     overflow: hidden;
 }

@@ -11,13 +11,16 @@ edit.selection.element = document.getElementById('selection')
 edit.selection.element.onmousedown = function () {edit.move.start()}
 
 document.getElementById('add-text').onclick = function () {
-    noteContent.onclick = edit.text.add
+    noteWrapper.onclick = function (event) {
+        console.log('t')
+        edit.text.add(event)
+    }
 }
 
-edit.text.add = function () {
-    noteContent.onclick = null
-    edit.vars.x1 = event.clientX
-    edit.vars.y1 = event.clientY
+edit.text.add = function (event) {
+    noteWrapper.onclick = null
+    edit.vars.x1 = getMousePosition(event).x
+    edit.vars.y1 = getMousePosition(event).y
     note.addElement('text', '', convert.toPoints({x1: edit.vars.x1, y1: edit.vars.y1}))
     render.text(note.elements[note.elements.length - 1], note.elements.length - 1)
     document.getElementById('element-data-' + (note.elements.length - 1)).focus()
@@ -64,7 +67,7 @@ edit.selection.popup.create = function (i) {
 edit.move.start = function () {
     edit.move.mouseStartX = window.client.mouseX
     edit.move.mouseStartY = window.client.mouseY
-    edit.move.elementStartX = parseFloat(document.getElementsByClassName('element')[app.elementSelected].style.left)
+    edit.move.elementStartX = note.elements[app.elementSelected].x
     edit.move.elementStartY = note.elements[app.elementSelected].y
     document.getElementsByClassName('element')[app.elementSelected].classList.add('no-transition')
     body.onmousemove = function () {edit.move.move(event)}
@@ -72,11 +75,12 @@ edit.move.start = function () {
 }
 edit.move.move = function (event) {
     let i = app.elementSelected
-    console.log(convert.toPx(edit.move.elementStartX) + (event.clientX - edit.move.mouseStartX));
-    
-    document.getElementsByClassName('element')[i].style.left = (edit.move.elementStartX + (event.clientX - edit.move.mouseStartX) * note.zoom) + 'px'
+    note.elements[i].x = convert.toPoints({x: event.clientX}).x
+    note.elements[i].y = convert.toPoints({y: event.clientY}).y
     //note.elements[i].y = event.clientY * edit.move.elementStartY / edit.move.mouseStartY
-    //render.all()
+    render.all()
+    console.log(note.elements[i].x, note.elements[i].y)
+
 }
 edit.move.stop = function () {
     document.getElementsByClassName('element')[app.elementSelected].classList.remove('no-transition')

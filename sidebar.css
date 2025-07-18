@@ -1,0 +1,56 @@
+#sidebar{
+    position: absolute;
+    display: inline-flex;
+    flex-direction: column;
+    top: var(--overlay-padding);
+    left: var(--overlay-padding);
+    bottom: calc(var(--overlay-padding) + var(--statusbar-height));
+    color: var(--clr-text);
+    pointer-events: none;
+    justify-content: space-between;
+}
+
+#sidebar > *{
+    pointer-events: all;
+    backdrop-filter: blur(var(--sidebar-blur));
+    display: inline-block;
+    background-color: var(--sidebar-bg);
+    width: fit-content;
+    box-shadow: var(--sidebar-shadow);
+    position: relative;
+}
+#sidebar > *:hover, #sidebar > *:active, #sidebar > *:focus-visible{
+    backdrop-filter: blur(var(--sidebar-blur-hover));
+    box-shadow: var(--sidebar-shadow-hover);
+    scale: 1.1;
+    background-color: var(--sidebar-bg-hover);
+}
+#sidebar > *:not(input):active{
+    transition: var(--transition-duration-button);
+}
+#note-title{
+    border: none;
+    field-sizing: content;
+    max-width: 15rem;
+    scale: 1 !important;
+}
+
+#tools{
+    border-radius: var(--sidebar-icon-roundness);
+}
+
+#sidebar .icon{
+    cursor: pointer;
+    width: var(--sidebar-icon-size);
+    height: var(--sidebar-icon-size);
+    display: block;
+    padding: var(--sidebar-icon-padding);
+    border-radius: var(--sidebar-icon-roundness);
+    box-sizing: content-box;
+}
+#sidebar .icon:active{
+    scale: 0.9;
+}
+#tools .icon{
+    border-radius: 0;
+}

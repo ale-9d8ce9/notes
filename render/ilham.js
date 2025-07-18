@@ -4,7 +4,7 @@ render = {
 }
 
 render.all = function () {
-    render.gesture.noteContentElement.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
+    noteContent.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
     for (let i = 0; i < note.elements.length; i++) {
         const element = note.elements[i]
         switch (element.type) {
@@ -49,8 +49,6 @@ render.image = function (data, i) {
     // Set the element data and values
     render.element.style.left = data.x + 'px'
     render.element.style.top = data.y + 'px'
-    render.element.style.width = (data.x2 - data.x1) + 'px'
-    render.element.style.height = (data.y2 - data.y2) + 'px'
 
     render.elementData.src = note.files[i].data
 
@@ -88,34 +86,36 @@ render.gesture.wheel = function (event) {
     event.preventDefault()
 
     if (event.ctrlKey) {
-        let initialScale = note.position.scale
+        let mousex = (event.clientX - noteContent.getBoundingClientRect().left) / note.position.scale
+        let mousey = (event.clientY - noteContent.getBoundingClientRect().top) / note.position.scale
+        let c = event.deltaY * 0.008 * note.position.scale
 
-        note.position.scale -= event.deltaY * note.position.scale * 0.008
+        note.position.scale -= c
         note.position.scale < 0.1 ? note.position.scale = 0.1 : undefined
         note.position.scale > 10 ? note.position.scale = 10 : undefined
         
-        let mousex = event.clientX - render.gesture.noteContentElement.getBoundingClientRect().left
-        let mousey = event.clientY - render.gesture.noteContentElement.getBoundingClientRect().top
-
-        note.position.x -= mousex * (note.position.scale - initialScale)
-        note.position.y -= mousey * (note.position.scale - initialScale)
+        if (note.position.scale < 10 && note.position.scale > 0.1) {
+            note.position.x += mousex * c
+            note.position.y += mousey * c
+        } else {
+            //note.position.x += mousex * c
+            //note.position.y += mousey * c
+        }
     } else {
         note.position.x -= event.deltaX * (note.position.scale ** 0.1 * 2)
         note.position.y -= event.deltaY * (note.position.scale ** 0.1 * 2)
     }
     
     window.requestAnimationFrame(() => {
-        render.gesture.noteContentElement.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
+        noteContent.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
         app.elementSelected != -1 ? edit.select(app.elementSelected) : undefined
     })
 }
 
 
 
-render.gesture.noteWrapperElement = document.querySelector('#note-wrapper')
-render.gesture.noteContentElement = document.querySelector('#note-content')
-render.gesture.selectionElement = document.querySelector('#selection')
 
-render.gesture.noteWrapperElement.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+noteWrapper.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+render.gesture.selectionElement = document.querySelector('#selection')
 render.gesture.selectionElement.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
 

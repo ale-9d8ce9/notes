@@ -158,64 +158,70 @@ async function deleteNote(noteId) {
 
 async function saveNote() {
     if (note.editable && !app.isSaving) {
-        app.isSaving = true
-        note.version = app.buildVersion
-        // prepare note
-        let noteToUpload = JSON.parse(JSON.stringify(note))
-        for (let i = 0; i < noteToUpload.files.length; i++) {
-            file = noteToUpload.files[i];
-            // if file exist
-            if (file != null) {
-                if (file.updated == false && file.deleted != true) {
-                    // if file is not updated "remove" file from upload
-                    noteToUpload.files[i] = null
-                } else if (file.deleted == true) {
-                    // if file is deleted remove its data from upload
-                    delete noteToUpload.files[i].data
+        try {
+            app.isSaving = true
+            note.version = app.buildVersion
+            // prepare note
+            let noteToUpload = JSON.parse(JSON.stringify(note))
+            for (let i = 0; i < noteToUpload.files.length; i++) {
+                file = noteToUpload.files[i];
+                // if file exist
+                if (file != null) {
+                    if (file.updated == false && file.deleted != true) {
+                        // if file is not updated "remove" file from upload
+                        noteToUpload.files[i] = null
+                    } else if (file.deleted == true) {
+                        // if file is deleted remove its data from upload
+                        delete noteToUpload.files[i].data
+                    }
                 }
             }
-        }
-        noteToUpload.dateModified = (new Date()).toISOString()
-        // send
-        result = await apiRequest({
-            action: 'saveNote',
-            username: app.user.username,
-            password: app.user.password,
-            noteId: 0,
-            note: JSON.stringify(noteToUpload)
-        })
-        if (result.result !== 'success') {
-            alert('Error saving note: ' + result.message)
+            noteToUpload.dateModified = (new Date()).toISOString()
+            // send
+            result = await apiRequest({
+                action: 'saveNote',
+                username: app.user.username,
+                password: app.user.password,
+                noteId: 0,
+                note: JSON.stringify(noteToUpload)
+            })
+            if (result.result !== 'success') {
+                return false
+            }
+
+            // after response
+            let filesToDelete = []
+            for (let i = 0; i < note.files.length; i++) {
+                // remove updated flag from files
+                if (note.files[i] != null) {
+                    note.files[i].updated = false
+                }
+                // schedule deletion of files / elements
+                if ((note.files[i] != null && note.files[i].deleted) || note.elements[i].deleted) {
+                    filesToDelete.push(i)
+                }
+            }
+
+            // delete files / elements
+            for (let i = filesToDelete.length - 1; i >= 0; i--) {
+                const j = filesToDelete[i];
+                note.files.splice(j, 1)
+                note.elements.splice(j, 1)
+            }
+
+            // if any files were deleted refresh the note
+            if (filesToDelete.length > 0) {
+                render.all()
+            }
+            delete filesToDelete
+            app.isSaving = false
+            
+        } catch (error) {
+            console.error('Error saving note:', error)
+            app.isSaving = false
+            alert('Error saving note: ' + error.message)
             return false
         }
-
-        // after response
-        let filesToDelete = []
-        for (let i = 0; i < note.files.length; i++) {
-            // remove updated flag from files
-            if (note.files[i] != null) {
-                note.files[i].updated = false
-            }
-            // schedule deletion of files / elements
-            if ((note.files[i] != null && note.files[i].deleted) || note.elements[i].deleted) {
-                filesToDelete.push(i)
-            }
-        }
-
-        // delete files / elements
-        for (let i = filesToDelete.length - 1; i >= 0; i--) {
-            const j = filesToDelete[i];
-            note.files.splice(j, 1)
-            note.elements.splice(j, 1)
-        }
-
-        // if any files were deleted refresh the note
-        if (filesToDelete.length > 0) {
-            render.all()
-        }
-        delete filesToDelete
-        app.isSaving = false
-
     } else {
         console.log('Note is not editable or is being saved')
     }
