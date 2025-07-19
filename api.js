@@ -91,6 +91,7 @@ async function getListNotes(username, password) {
                 </tr>
             `
         }
+        app.noteId = notes.length
         return true
     } else {
         // show error
@@ -101,6 +102,7 @@ async function getListNotes(username, password) {
 
 
 async function getFullNote(noteId) {
+    app.noteId = noteId
     response = await apiRequest({
         action: 'getFullNote',
         username: app.user.username,
@@ -109,6 +111,7 @@ async function getFullNote(noteId) {
     })
     if (response.result == 'success') {
         console.log('Note fetched successfully:', response.message)
+        app.noteId = noteId
         response = response.message
         note = new newNote({
             name: response.name,
@@ -128,12 +131,24 @@ async function getFullNote(noteId) {
 }
 
 async function addNote() {
-    apiRequest({
-        action: 'addNote',
-        username: app.user.username,
-        password: app.user.password,
-        note: JSON.stringify(note)
-    })
+    try {
+        await apiRequest({
+            action: 'addNote',
+            username: app.user.username,
+            password: app.user.password,
+            note: JSON.stringify(note)
+        })
+    } catch (e) {
+        console.error('Error adding note:', e)
+        alert('Error adding note: ' + e)
+
+        noteContent.innerHTML = ''
+        delete note
+        document.querySelector('body').setAttribute('in-overlay', 'true')
+        getListNotes(app.user.username, app.user.password)
+
+        return false
+    }
 }
 
 
@@ -156,7 +171,7 @@ async function deleteNote(noteId) {
 }
 
 
-async function saveNote() {
+async function saveNote(noteId) {
     if (note.editable && !app.isSaving) {
         try {
             app.isSaving = true
@@ -182,7 +197,7 @@ async function saveNote() {
                 action: 'saveNote',
                 username: app.user.username,
                 password: app.user.password,
-                noteId: 0,
+                noteId: noteId,
                 note: JSON.stringify(noteToUpload)
             })
             if (result.result !== 'success') {
@@ -215,7 +230,7 @@ async function saveNote() {
             }
             delete filesToDelete
             app.isSaving = false
-            
+
         } catch (error) {
             console.error('Error saving note:', error)
             app.isSaving = false

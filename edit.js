@@ -26,8 +26,8 @@ edit.text.add = function (event) {
     document.getElementById('element-data-' + (note.elements.length - 1)).focus()
 }
 
-edit.image.add = function (base64String) {
-    note.addElement('image', base64String, convert.toPoints({x1: client.mouseX, y1: client.mouseY, x2: client.mouseX + 100, y2: client.mouseY + 100}))
+edit.image.add = function (base64String, mouse) {
+    note.addElement('image', base64String, convert.toPoints({x1: mouse.x, y1: mouse.y, x2: mouse.x + 100, y2: mouse.y + 100}))
     render.image(note.elements[note.elements.length - 1], note.elements.length - 1)
 }
 

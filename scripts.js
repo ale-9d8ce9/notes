@@ -2,13 +2,8 @@ window.onload = start
 const body = document.querySelector('body')
 const noteContent = document.getElementById('note-content')
 const noteWrapper = document.getElementById('note-wrapper')
-client = {mouseX: 0, mouseY: 0}
 convert = {}
 
-noteContent.addEventListener('mousemove', function (event) {
-    client.mouseX = event.clientX
-    client.mouseY = event.clientY
-})
 
 async function start() {
     // check backend
@@ -73,7 +68,7 @@ document.addEventListener('paste', function(event) {
             const imageFile = items[i].getAsFile()
             imageToBase64(imageFile, function(base64String) {
                 // create image
-                edit.image.add(base64String)
+                edit.image.add(base64String, getMousePosition(event))
             })
         }
     }
@@ -90,6 +85,19 @@ function imageToBase64(imageFile, callback) {
     }
 }
 
+document.getElementById('close-note').onclick = function () {
+    saveNote(app.noteId).then(function () {
+        noteContent.innerHTML = ''
+        delete note
+        document.querySelector('body').setAttribute('in-overlay', 'true')
+        getListNotes(app.user.username, app.user.password)
+    }
+    ).catch(function (error) {
+        console.error('Error saving note:', error)
+    })
+}
+
+
 getMousePosition = function (event) {
     const rect = noteContent.getBoundingClientRect()
     return {
@@ -98,33 +106,19 @@ getMousePosition = function (event) {
     }
 }
 
-document.getElementById('close-note').onclick = function () {
-    saveNote().then(function () {
-        noteContent.innerHTML = ''
-        note = null
-        document.querySelector('body').setAttribute('in-overlay', 'true')
-        openOverlay('listNotes')
-    }
-    ).catch(function (error) {
-        console.error('Error saving note:', error)
-    })
-}
-
-
-
 convert.toPx = function (values) {
     // Convert the values to pixels based on the current zoom level
     // innerWidth is always used so it doesnt stretch and is independent from the window aspect ratio
     values = JSON.parse(JSON.stringify(values))
     
-    values.x ? values.x = values.x * window.innerWidth * note.position.scale : undefined
-    values.y ? values.y = values.y * window.innerWidth * note.position.scale : undefined
-    values.x1 ? values.x1 = values.x1 * window.innerWidth * note.position.scale : undefined
-    values.y1 ? values.y1 = values.y1 * window.innerWidth * note.position.scale : undefined
-    values.x2 ? values.x2 = values.x2 * window.innerWidth * note.position.scale : undefined
-    values.y2 ? values.y2 = values.y2 * window.innerWidth * note.position.scale : undefined
-    values.width ? values.width = values.width * window.innerWidth * note.position.scale : undefined
-    values.height ? values.height = values.height * window.innerWidth * note.position.scale : undefined
+    values.x ? values.x = values.x * window.innerWidth : undefined
+    values.y ? values.y = values.y * window.innerWidth : undefined
+    values.x1 ? values.x1 = values.x1 * window.innerWidth : undefined
+    values.y1 ? values.y1 = values.y1 * window.innerWidth : undefined
+    values.x2 ? values.x2 = values.x2 * window.innerWidth : undefined
+    values.y2 ? values.y2 = values.y2 * window.innerWidth : undefined
+    values.width ? values.width = values.width * window.innerWidth : undefined
+    values.height ? values.height = values.height * window.innerWidth : undefined
     return values
 }
 

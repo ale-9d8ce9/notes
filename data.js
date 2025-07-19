@@ -48,9 +48,9 @@ class newNote {
     }
     load() {
         this.versionCheck()
-        render.all()
         document.querySelector('body').setAttribute('in-overlay', 'false')
         openOverlay()
+        render.all()
     }
     versionCheck() {
         if (this.version != app.buildVersion) {
