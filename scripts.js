@@ -68,7 +68,7 @@ document.addEventListener('paste', function(event) {
             const imageFile = items[i].getAsFile()
             imageToBase64(imageFile, function(base64String) {
                 // create image
-                edit.image.add(base64String, getMousePosition(event))
+                edit.image.add(base64String)
             })
         }
     }
@@ -96,29 +96,41 @@ document.getElementById('close-note').onclick = function () {
         console.error('Error saving note:', error)
     })
 }
+document.getElementById('save-note').onclick = function () {
+    saveNote(app.noteId).catch(function (error) {
+        console.error('Error saving note:', error)
+        alert('Error saving note: ' + error)
+    })
+}
 
 
 getMousePosition = function (event) {
-    const rect = noteContent.getBoundingClientRect()
+    // Get the mouse position relative to the note content
     return {
-        x: (event.clientX - rect.left) / note.position.scale,
-        y: (event.clientY - rect.top) / note.position.scale
+        x: (event.clientX - note.position.x),
+        y: (event.clientY - note.position.y)
     }
 }
+
+
+function isValidNumber(value) {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
 
 convert.toPx = function (values) {
     // Convert the values to pixels based on the current zoom level
     // innerWidth is always used so it doesnt stretch and is independent from the window aspect ratio
     values = JSON.parse(JSON.stringify(values))
     
-    values.x ? values.x = values.x * window.innerWidth : undefined
-    values.y ? values.y = values.y * window.innerWidth : undefined
-    values.x1 ? values.x1 = values.x1 * window.innerWidth : undefined
-    values.y1 ? values.y1 = values.y1 * window.innerWidth : undefined
-    values.x2 ? values.x2 = values.x2 * window.innerWidth : undefined
-    values.y2 ? values.y2 = values.y2 * window.innerWidth : undefined
-    values.width ? values.width = values.width * window.innerWidth : undefined
-    values.height ? values.height = values.height * window.innerWidth : undefined
+    values.x ? values.x = values.x * app.initialWindowInnerWidth : undefined
+    values.y ? values.y = values.y * app.initialWindowInnerWidth : undefined
+    values.x1 ? values.x1 = values.x1 * app.initialWindowInnerWidth : undefined
+    values.y1 ? values.y1 = values.y1 * app.initialWindowInnerWidth : undefined
+    values.x2 ? values.x2 = values.x2 * app.initialWindowInnerWidth : undefined
+    values.y2 ? values.y2 = values.y2 * app.initialWindowInnerWidth : undefined
+    values.width ? values.width = values.width * app.initialWindowInnerWidth : undefined
+    values.height ? values.height = values.height * app.initialWindowInnerWidth : undefined
     return values
 }
 
@@ -127,18 +139,16 @@ convert.toPoints = function (values) {
     // innerWidth is always used so it doesnt stretch and is independent from the window aspect ratio
     values = JSON.parse(JSON.stringify(values))
     
-    values.x ? values.x = values.x / window.innerWidth / note.position.scale : undefined
-    values.y ? values.y = values.y / window.innerWidth / note.position.scale : undefined
-    values.x1 ? values.x1 = values.x1 / window.innerWidth / note.position.scale : undefined
-    values.y1 ? values.y1 = values.y1 / window.innerWidth / note.position.scale : undefined
-    values.x2 ? values.x2 = values.x2 / window.innerWidth / note.position.scale : undefined
-    values.y2 ? values.y2 = values.y2 / window.innerWidth / note.position.scale : undefined
-    values.width ? values.width = values.width / window.innerWidth / note.position.scale : undefined
-    values.height ? values.height = values.height / window.innerWidth / note.position.scale : undefined
+    values.x ? values.x = values.x / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.y ? values.y = values.y / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.x1 ? values.x1 = values.x1 / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.y1 ? values.y1 = values.y1 / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.x2 ? values.x2 = values.x2 / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.y2 ? values.y2 = values.y2 / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.width ? values.width = values.width / app.initialWindowInnerWidth / note.position.scale : undefined
+    values.height ? values.height = values.height / app.initialWindowInnerWidth / note.position.scale : undefined
     return values
 }
-
-
 
 document.querySelectorAll('.overlay-x').forEach(function (element) {
     if (element.onclick) return // Prevent multiple bindings

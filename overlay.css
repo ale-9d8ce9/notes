@@ -56,7 +56,7 @@
     cursor: pointer;
     background-color: var(--overlay-title-bg);
     border-radius: 50%;
-    background-image: url(./icons/close.png);
+    background-image: url(./icons/close.svg);
     background-size: cover;
     background-position: center;
     outline: .1rem solid transparent;

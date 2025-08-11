@@ -10,6 +10,7 @@ app = {
     noteId: -1,
     isSaving: false,
     elementSelected:-1,
+    initialWindowInnerWidth: window.innerWidth, // Store the initial window width
 
     history: [
         {

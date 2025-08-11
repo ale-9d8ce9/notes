@@ -39,16 +39,12 @@
     --ui-icon-size: 1.5rem;
     --ui-icon-size-small: 1.2rem;
 
-    --statusbar-height: 2.5rem;
-    --statusbar-height-big: 3rem;
-    --statusbar-bg: hsl(0, 0%, 11%);
-
     --selection-border-width: .2rem;
     --selection-border-offset: .4rem;
     --selection-border-color1: hsl(69, 62%, 65%);
     --selection-border-color2: hsl(135, 58%, 48%);
 
-    --transition-duration: 0.2s;
+    --transition-duration: 0.3s;
     --transition-duration-button: 0.1s;
 }
 

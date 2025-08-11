@@ -4,7 +4,7 @@
     flex-direction: column;
     top: var(--overlay-padding);
     left: var(--overlay-padding);
-    bottom: calc(var(--overlay-padding) + var(--statusbar-height));
+    bottom: var(--overlay-padding);
     color: var(--clr-text);
     pointer-events: none;
     justify-content: space-between;
@@ -35,8 +35,9 @@
     scale: 1 !important;
 }
 
-#tools{
+#tools, #statusbar {
     border-radius: var(--sidebar-icon-roundness);
+    overflow: hidden;
 }
 
 #sidebar .icon{

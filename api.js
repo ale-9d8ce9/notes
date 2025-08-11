@@ -84,7 +84,7 @@ async function getListNotes(username, password) {
                 <tr class="listNoteElement" onclick="getFullNote(${i})">
                 <td class="noteTitle">${j.name}</td>
                 <td class="noteActions">
-                    <button class="noteActionButton" onclick="deleteNote(${i}); event.stopPropagation();">Delete</button>
+                    <button class="noteActionButton" onclick="deleteNote(${i}); event.stopPropagation();"><img src="icons/delete.svg"></button>
                 </td>
                 <td class="dateCell">${j.dateModified}</td>
                 <td class="dateCell">${j.dateCreated}</td>
@@ -138,6 +138,7 @@ async function addNote() {
             password: app.user.password,
             note: JSON.stringify(note)
         })
+        await saveNote(app.noteId)
     } catch (e) {
         console.error('Error adding note:', e)
         alert('Error adding note: ' + e)
@@ -175,6 +176,7 @@ async function saveNote(noteId) {
     if (note.editable && !app.isSaving) {
         try {
             app.isSaving = true
+            updateSaveIcon()
             note.version = app.buildVersion
             // prepare note
             let noteToUpload = JSON.parse(JSON.stringify(note))
@@ -222,12 +224,9 @@ async function saveNote(noteId) {
                 const j = filesToDelete[i];
                 note.files.splice(j, 1)
                 note.elements.splice(j, 1)
+                render.delete(j)
             }
 
-            // if any files were deleted refresh the note
-            if (filesToDelete.length > 0) {
-                render.all()
-            }
             delete filesToDelete
             app.isSaving = false
 
@@ -240,15 +239,27 @@ async function saveNote(noteId) {
     } else {
         console.log('Note is not editable or is being saved')
     }
+    app.isSaving = false
+    updateSaveIcon()
     return result
 }
-
-function decrypt(i) {
-    return atob(i)
+function updateSaveIcon() {
+    if (app.isSaving) {
+        document.getElementById('save-note').setAttribute('src', 'icons/saving.svg')
+        document.getElementById('save-note').setAttribute('show', 'true')
+    } else {
+        document.getElementById('save-note').setAttribute('src', 'icons/save.svg')
+        document.getElementById('save-note').setAttribute('show', 'false')
+    }
 }
 
-function encrypt(i) {
-    return btoa(i)
+
+function decrypt(data) {
+    return atob(data)
+}
+
+function encrypt(data) {
+    return btoa(data)
 }
 
 async function pingServer(callback, errorCallback) {

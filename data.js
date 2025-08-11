@@ -46,6 +46,21 @@ class newNote {
             }
         }
     }
+    removeElement(i) {
+        if (!this.editable) {
+            throw new Error('Note is not editable')
+        } else {
+            if (i < 0 || i >= this.elements.length) {
+                throw new Error('Index out of bounds')
+            }
+            this.elements[i].deleted = true
+            if (this.files[i] != null) {
+                this.files[i].deleted = true
+            }
+            render.delete(i)
+            app.elementSelected == i ? edit.select(-1) : undefined
+        }
+    }
     load() {
         this.versionCheck()
         document.querySelector('body').setAttribute('in-overlay', 'false')
@@ -76,8 +91,8 @@ newElement = {
                 align: 'left',
                 font: 'Arial',
                 textSize: 12,
-                color: '#000000',
-                background: '#ffffff',
+                color: '#ffffff',
+                background: '#ffffff00',
                 opacity: 1,
                 underline: false,
                 bold: false,
@@ -99,7 +114,7 @@ newElement = {
                 border: 'none',
                 borderRadius: '0px',
                 boxShadow: 'none',
-                background: '#ffffff'
+                background: '#ffffff00'
             }
         }
     }

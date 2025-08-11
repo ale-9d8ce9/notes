@@ -1,5 +1,4 @@
 render = {
-    popup: {},
     gesture: {}
 }
 
@@ -7,14 +6,26 @@ render.all = function () {
     noteContent.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
     for (let i = 0; i < note.elements.length; i++) {
         const element = note.elements[i]
-        switch (element.type) {
-            case 'text':
-                render.text(element, i)
-                break
-            case 'image':
-                render.image(element, i)
-                break
+        if (!element.deleted) {
+            switch (element.type) {
+                case 'text':
+                    render.text(element, i)
+                    break
+                case 'image':
+                    render.image(element, i)
+                    break
+            }
+        } else {
+            // If the element is deleted, remove it from the DOM
+            render.delete(i)
         }
+    }
+}
+
+render.delete = function (i) {
+    const element = document.getElementById('element-' + i)
+    if (element) {
+        element.remove()
     }
 }
 
@@ -28,6 +39,7 @@ render.text = function (data, i) {
     render.elementData.innerText = data.text
     note.editable ? render.elementData.contentEditable = true : undefined
     render.elementData.style.textAlign = data.style.align
+    render.elementData.style.color = data.style.color
     render.elementData.style.fontFamily = data.style.font
     render.elementData.style.fontSize = data.style.textSize + 'px'
 
@@ -97,25 +109,39 @@ render.gesture.wheel = function (event) {
         if (note.position.scale < 10 && note.position.scale > 0.1) {
             note.position.x += mousex * c
             note.position.y += mousey * c
-        } else {
-            //note.position.x += mousex * c
-            //note.position.y += mousey * c
         }
     } else {
         note.position.x -= event.deltaX * (note.position.scale ** 0.1 * 2)
         note.position.y -= event.deltaY * (note.position.scale ** 0.1 * 2)
     }
-    
+
+    render.gesture.position()
+}
+
+
+render.gesture.moveWithCtrl = function (event) {
+    if (event.ctrlKey) {
+        note.position.x -= render.gesture.oldMouseX - event.clientX
+        note.position.y -= render.gesture.oldMouseY - event.clientY
+        
+        render.gesture.position()
+    }
+    render.gesture.oldMouseX = event.clientX
+    render.gesture.oldMouseY = event.clientY
+}
+
+
+render.gesture.position = function () {
     window.requestAnimationFrame(() => {
         noteContent.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
-        app.elementSelected != -1 ? edit.select(app.elementSelected) : undefined
+        app.elementSelected != -1 ? edit.selection.updatePosition(app.elementSelected) : undefined
     })
 }
 
 
-
-
+noteWrapper.addEventListener('mousemove', (event) => {render.gesture.moveWithCtrl(event)})
 noteWrapper.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+
 render.gesture.selectionElement = document.querySelector('#selection')
 render.gesture.selectionElement.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
 
