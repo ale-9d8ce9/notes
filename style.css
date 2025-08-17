@@ -1,35 +1,56 @@
 :root {
-    --note-bg: hsl(0, 0%, 0%);
+    --note-bg: oklch(0% 0 0);
     --page-bg: var(--note-bg);
 
-    --clr: hsl(261.14, 94.36%, 73.38%);
-    --clr-desat: hsla(264.87, 100%, 86%, 0.3);
-    --clr-secondary: hsl(0, 0%, 51%);
-    --clr-text: hsl(0, 0%, 100%);
-    --clr-text-alt: hsl(0, 0%, 0%);
+    --test: oklch(100% 0.00011 271.152);
 
-    --overlay-bg: hsla(250.97, 68.28%, 73.2%, 0.32);
+    --clr-hue: 225;
+    --clr-saturation: 0.15;
+    --clr-lightness: 70%;
+
+    --clr-accent-hue: 300;
+    --clr-accent-saturation: calc(var(--clr-saturation) * 0.8);
+    --clr-accent-lightness: var(--clr-lightness);
+
+    --clr-bg-hue: 250;
+    --clr-bg-saturation: 0.02;
+    --clr-bg-lightness: var(--clr-lightness);
+
+    --clr: oklch(var(--clr-lightness)  var(--clr-saturation) var(--clr-hue));
+    --clr-desat: oklch(calc(var(--clr-lightness) + 10%) 0.10 var(--clr-hue) / 0.3);
+    --clr-accent: oklch(var(--clr-accent-lightness) var(--clr-accent-saturation) var(--clr-accent-hue));
+    --clr-accent-desat: oklch(calc(var(--clr-accent-lightness) + 10%) 0.10 var(--clr-accent-hue) / 0.3);
+    --clr-bg: oklch(var(--clr-bg-lightness)  var(--clr-bg-saturation) var(--clr-bg-hue) / 0.3);
+    --clr-text: oklch(100% 0.00011 271.152);
+    --clr-text-alt: oklch(0% 0 0);
+
+    --overlay-bg: oklch(calc(var(--clr-bg-lightness) * 0.8) calc(var(--clr-bg-saturation) * 0.7) var(--clr-bg-hue) / 0.32);
     --overlay-padding: 1rem;
     --overlay-roundness: 1.5rem;
     --overlay-padding-elements: 1rem;
-    --overlay-title-bg: hsla(253.68, 76.68%, 69.98%, 0.51);
+    --overlay-title-bg: oklch(var(--clr-lightness) var(--clr-saturation) var(--clr-hue) / 0.51);
     --overlay-blur: 1rem;
-    --overlay-shadow: 0 0 15px 5px hsla(0, 0%, 0%, 0.231), 0 4px 25px 0 hsla(0, 0%, 100%, 0.25) inset;
+    --overlay-shadow:
+        0 0 15px 5px oklch(0% 0 0 / 0.231),
+        0 4px 25px 0 oklch(100% 0.00011 271.152 / 0.25) inset;
 
-    --sidebar-bg: hsla(0, 0%, 43%, 0.228);
-    --sidebar-bg-hover: hsla(0, 0%, 20%, 0.211);
     --sidebar-padding: 1rem;
     --sidebar-icon-size: 1.5rem;
-    --sidebar-icon-padding: .7rem;
+    --sidebar-icon-padding: .45rem;
     --sidebar-icon-roundness: 10rem;
-    --sidebar-blur: .2rem;
-    --sidebar-blur-hover: calc(var(--sidebar-blur) * 3);
-    --sidebar-shadow:
-        0 0 10px 0 hsla(0, 0%, 0%, 0.502),
-        0 0 5px 0 hsla(0, 0%, 56%, 0.259) inset;
-    --sidebar-shadow-hover:
-        0 0 15px 0 hsla(0, 0%, 0%, 0.631),
-        0 0 10px 0 hsla(0, 0%, 79%, 0.502) inset;
+
+    --ui-blur: .2rem;
+    --ui-blur-hover: calc(var(--ui-blur) * 3);
+
+    --ui-bg: oklch(53.824% min(var(--clr-saturation), 0.04) var(--clr-hue) / 0.228);
+    --ui-bg-hover: oklch(32.109% min(var(--clr-saturation), 0.08) var(--clr-hue) / 0.211);
+
+    --ui-shadow:
+        0 0 10px 0 oklch(0% 0 0 / 0.502),
+        0 0 5px 0 oklch(65.004% 0.00007 271.152 / 0.259) inset;
+    --ui-shadow-hover:
+        0 0 15px 0 oklch(0% 0 0 / 0.631),
+        0 0 10px 0 oklch(83.591% 0.0001 271.152 / 0.502) inset;
 
     --ui-elements-roundness: .7rem;
     --ui-elements-border-width: .15rem;
@@ -41,8 +62,14 @@
 
     --selection-border-width: .2rem;
     --selection-border-offset: .4rem;
-    --selection-border-color1: hsl(69, 62%, 65%);
-    --selection-border-color2: hsl(135, 58%, 48%);
+    --selection-border-roundness: .4rem;
+    --selection-border-color1: oklch(var(--clr-lightness) var(--clr-saturation) calc(var(--clr-hue) - 60));
+    --selection-border-color2: oklch(var(--clr-lightness) var(--clr-saturation) calc(var(--clr-hue) + 60));
+
+    --settings-bg: var(--overlay-bg);
+    --settings-padding: var(--overlay-padding);
+    --settings-padding-elements: var(--overlay-padding-elements);
+    --settings-blur: var(--overlay-blur);
 
     --transition-duration: 0.3s;
     --transition-duration-button: 0.1s;
@@ -60,8 +87,11 @@
     color: var(--clr-text);
     transition: all var(--transition-duration) ease;
     font-size: var(--ui-elements-font-size);
-    user-select: none;
-    --webkit-user-select: none;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -ms-user-select: none !important;
+    -moz-user-select: none !important;
+    -webkit-touch-callout: none !important;
 }
 
 
@@ -74,8 +104,19 @@
     transition: 0s !important;
 }
 
+.dragging{
+    transition: .1s linear !important;
+}
 
+.selectable{
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -ms-user-select: text !important;
+    -moz-user-select: text !important;
+    -webkit-touch-callout: text !important;
+}
 
+html{color-scheme: dark light;}
 body{
     position: absolute;
     width: 100%;
@@ -125,6 +166,39 @@ input[type="text"], input[type="password"], button{
 input[type="text"], input[type="password"]{
     width: 100%;
 }
+input[type="text"]:focus, input[type="password"]:focus, button:focus{
+    border-color: var(--clr-accent);
+    background-color: var(--clr-accent-desat);
+}
+input[type="text"]:hover, input[type="password"]:hover{
+    border-color: var(--clr);
+}
+
+input[type="range"]{
+    appearance: none;
+    width: 100%;
+    height: 1rem;
+    min-width: 8rem;
+    background-color: var(--clr-desat);
+    border-radius: var(--ui-elements-roundness);
+    outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--clr-accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition-duration-button) ease;
+}
+input[type="range"]:hover::-webkit-slider-thumb {
+    scale: 1.2;
+}
+input[type="range"]:active::-webkit-slider-thumb {
+    scale: 0.9;
+}
+
 button{
     cursor: pointer;
     background-color: var(--clr-desat);
@@ -133,19 +207,16 @@ button{
 }
 button.secondary{
     background-color: transparent;
-    border-color: var(--clr-desat);
+    border-color: var(--clr-accent-desat);
     color: var(--clr-text);
-}
-input[type="text"]:focus, input[type="password"]:focus, button:focus{
-    border-color: var(--clr);
-    background-color: var(--clr-desat);
-}
-input[type="text"]:hover, input[type="password"]:hover{
-    border-color: var(--clr);
 }
 button:hover{
     border-color: var(--clr);
     scale: 1.05;
+}
+button.secondary:hover{
+    border-color: var(--clr-accent);
+    background-color: var(--clr-accent-desat);
 }
 button:active{
     background-color: var(--clr);
@@ -154,8 +225,8 @@ button:active{
     scale: 0.95;
 }
 button.secondary:active{
-    background-color: var(--clr-desat);
-    border-color: var(--clr);
+    background-color: var(--clr-accent-desat);
+    border-color: var(--clr-accent);
     color: var(--clr-text);
 }
 
@@ -191,4 +262,72 @@ td, th{
 }
 .dateCell, th{
     white-space: nowrap;
+}
+
+
+input.hue-slider{
+    appearance: none;
+    --lightness: 65%;
+    --saturation: var(--clr-saturation);
+    border-radius: 3rem;
+    background-image: linear-gradient(to right,
+        oklch(var(--lightness) var(--saturation) 0),
+        oklch(var(--lightness) var(--saturation) 0),
+        oklch(var(--lightness) var(--saturation) 30),
+        oklch(var(--lightness) var(--saturation) 60),
+        oklch(var(--lightness) var(--saturation) 90),
+        oklch(var(--lightness) var(--saturation) 120),
+        oklch(var(--lightness) var(--saturation) 150),
+        oklch(var(--lightness) var(--saturation) 180),
+        oklch(var(--lightness) var(--saturation) 210),
+        oklch(var(--lightness) var(--saturation) 240),
+        oklch(var(--lightness) var(--saturation) 270),
+        oklch(var(--lightness) var(--saturation) 300),
+        oklch(var(--lightness) var(--saturation) 330),
+        oklch(var(--lightness) var(--saturation) 360),
+        oklch(var(--lightness) var(--saturation) 360));
+}
+input.hue-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: oklch(65% 65% var(--clr-hue));
+    cursor: pointer;
+    outline: .1rem solid white;
+}
+input.saturation-slider{
+    appearance: none;
+    border-radius: 3rem;
+    background-image: linear-gradient(to right,
+        oklch(50% 0% var(--clr-hue)),
+        oklch(50% 100% var(--clr-hue)));
+}
+input.saturation-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: oklch(65% var(--clr-saturation) var(--clr-hue));
+    cursor: pointer;
+    outline: .1rem solid white;
+}
+input.lightness-slider{
+    appearance: none;
+    border-radius: 3rem;
+    background-image: linear-gradient(to right,
+        oklch(0% 0 var(--clr-hue)),
+        oklch(100% 0 var(--clr-hue)));
+}
+input.lightness-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: oklch(var(--clr-lightness) 0 0);
+    cursor: pointer;
+    outline: .1rem solid white;
 }

@@ -22,6 +22,22 @@ render.all = function () {
     }
 }
 
+render.single = function (data, i) {
+    if (!data.deleted) {
+        switch (data.type) {
+            case 'text':
+                render.text(data, i)
+                break
+            case 'image':
+                render.image(data, i)
+                break
+        }
+    } else {
+        // If the element is deleted, remove it from the DOM
+        render.delete(i)
+    }
+}
+
 render.delete = function (i) {
     const element = document.getElementById('element-' + i)
     if (element) {
@@ -123,7 +139,7 @@ render.gesture.moveWithCtrl = function (event) {
     if (event.ctrlKey) {
         note.position.x -= render.gesture.oldMouseX - event.clientX
         note.position.y -= render.gesture.oldMouseY - event.clientY
-        
+
         render.gesture.position()
     }
     render.gesture.oldMouseX = event.clientX

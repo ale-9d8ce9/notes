@@ -6,6 +6,7 @@ convert = {}
 
 
 async function start() {
+    settings.start()
     // check backend
     if (app.backend = localStorage.getItem('backend')) {
         if (await pingServer()) {

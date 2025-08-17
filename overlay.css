@@ -74,3 +74,23 @@
     padding-bottom: calc(var(--overlay-padding) - 1rem);
 }
 
+/*
+#overlay button{
+    background-color: var(--clr-accent-desat);
+}
+#overlay button.secondary{
+    background-color: var(--clr-desat);
+}
+#overlay button:hover{
+    border-color: var(--clr-accent);
+}
+#overlay button.secondary:hover{
+    border-color: var(--clr);
+}
+#overlay button:active{
+    background-color: var(--clr-accent);
+}
+#overlay button.secondary:active{
+    background-color: var(--clr-desat);
+}
+*/

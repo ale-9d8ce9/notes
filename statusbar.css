@@ -3,13 +3,15 @@
     display: inline-flex;
     position: relative;
     padding-left: calc(var(--sidebar-icon-size) + var(--sidebar-icon-padding) * 2);
+    padding-right: calc(var(--sidebar-icon-padding) * 2);
 }
 
 #statusbar::before{
     content: '';
     position: absolute;
-    top: var(--sidebar-icon-padding);
-    left: var(--sidebar-icon-padding);
+    top: 50%;
+    left: calc(var(--sidebar-icon-padding) * 2);
+    translate: 0 -50%;
     width: var(--sidebar-icon-size);
     height: var(--sidebar-icon-size);
     z-index: -1;
@@ -27,7 +29,8 @@
     scale: 0;
 }
 #statusbar:hover, #statusbar:active, #statusbar:focus-visible{
-    padding-left: 0;
+    padding-left: var(--sidebar-icon-padding);
+    padding-right: var(--sidebar-icon-padding);
 }
 
 #statusbar .icon{

@@ -12,18 +12,18 @@
 
 #sidebar > *{
     pointer-events: all;
-    backdrop-filter: blur(var(--sidebar-blur));
+    backdrop-filter: blur(var(--ui-blur));
     display: inline-block;
-    background-color: var(--sidebar-bg);
+    background-color: var(--ui-bg);
     width: fit-content;
-    box-shadow: var(--sidebar-shadow);
+    box-shadow: var(--ui-shadow);
     position: relative;
 }
 #sidebar > *:hover, #sidebar > *:active, #sidebar > *:focus-visible{
-    backdrop-filter: blur(var(--sidebar-blur-hover));
-    box-shadow: var(--sidebar-shadow-hover);
+    backdrop-filter: blur(var(--ui-blur-hover));
+    box-shadow: var(--ui-shadow-hover);
     scale: 1.1;
-    background-color: var(--sidebar-bg-hover);
+    background-color: var(--ui-bg-hover);
 }
 #sidebar > *:not(input):active{
     transition: var(--transition-duration-button);
@@ -38,6 +38,7 @@
 #tools, #statusbar {
     border-radius: var(--sidebar-icon-roundness);
     overflow: hidden;
+    padding: var(--sidebar-icon-padding);
 }
 
 #sidebar .icon{
@@ -46,8 +47,11 @@
     height: var(--sidebar-icon-size);
     display: block;
     padding: var(--sidebar-icon-padding);
-    border-radius: var(--sidebar-icon-roundness);
     box-sizing: content-box;
+}
+#sidebar .icon:hover{
+    scale: 1.1;
+    transition: scale var(--transition-duration-button) ease, all var(--transition-duration);
 }
 #sidebar .icon:active{
     scale: 0.9;

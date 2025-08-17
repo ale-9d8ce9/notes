@@ -11,6 +11,7 @@
     z-index: 0;
     transition: 0s;
     opacity: 0;
+    border-radius: var(--selection-border-roundness);
     scale: 0;
 }
 
@@ -20,20 +21,24 @@
     scale: 1;
 }
 #selection-popup{
-    padding: 0.5rem;
+    padding: var(--ui-elements-padding);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--ui-elements-padding);
     opacity: 0;
     scale: 0;
     pointer-events: none;
-    background-color: aliceblue;
+    background-color: var(--ui-bg);
+    backdrop-filter: blur(1.2rem);
+    filter: blur(--ui-blur);
+    box-shadow: var(--ui-shadow);
     position: absolute;
+    border-radius: calc(var(--ui-elements-roundness) + var(--ui-elements-padding));
     top: 50%;
     left: 50%;
     translate: -50% -50%;
 }
-/* selection popup bigger hidden hitbox, change padding to increase */
+/* bigger hidden hitbox for selection popup, change padding to increase/decrease */
 #selection-popup::before{
     content: '';
     position: absolute;
@@ -50,6 +55,9 @@
     scale: 1;
     pointer-events: all;
     translate: -50% -100%;
+    box-shadow: var(--ui-shadow-hover);
+    background-color: var(--ui-bg-hover);
+    filter: blur(0);
     top: -1rem;
 }
 
@@ -63,7 +71,7 @@
     width: 100%;
     padding: var(--selection-border-offset);
     height: 100%;
-    border-radius: inherit;
+    border-radius: calc(var(--selection-border-roundness) + var(--selection-border-width));
     z-index: -1;
     border: var(--selection-border-width) solid transparent;
     background: linear-gradient(var(--selection-border-rotation), var(--selection-border-color1), var(--selection-border-color2)) border-box;

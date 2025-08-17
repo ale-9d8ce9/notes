@@ -8,15 +8,8 @@ edit = {
 edit.selection.element = document.getElementById('selection')
 
 
-//edit.selection.element.onmousedown = function () {edit.move.start(event)}
+edit.selection.element.onmousedown = function () {edit.move.start(event)}
 
-edit.selection.element.setAttribute('ondoubleclick', `function () {
-    let i = app.elementSelected
-    if (note.elements[i].type === 'text') {
-        document.getElementById('element-data-' + i).focus()
-    }
-    console.log('Double clicked on element', i)
-}`)
 
 document.getElementById('add-text').onclick = function () {
     noteWrapper.onclick = function (event) {
@@ -71,21 +64,22 @@ edit.move.start = function (event) {
     edit.move.elementStartX = note.elements[app.elementSelected].x
     edit.move.elementStartY = note.elements[app.elementSelected].y
     document.getElementsByClassName('element')[app.elementSelected].classList.add('no-transition')
-    body.onmousemove = function () {edit.move.move(event)}
-    body.onmouseup = edit.move.stop
+    noteContent.classList.remove('selectable')
+    body.onmousemove = function () {edit.move.move(window.event)}
+    body.onmouseup = function() {edit.move.stop()}
 }
 edit.move.move = function (event) {
     let i = app.elementSelected
-    //note.elements[i].x = convert.toPoints({x: event.clientX}).x
-    //note.elements[i].y = convert.toPoints({y: event.clientY}).y
-    note.elements[i].x = event.clientX * edit.move.elementStartX / edit.move.mouseStartX
-    note.elements[i].y = event.clientY * edit.move.elementStartY / edit.move.mouseStartY
-    render.all()
-    console.log(note.elements[i].x, note.elements[i].y)
-
+    note.elements[i].x = convert.toPoints(getMousePosition(event)).x
+    note.elements[i].y = convert.toPoints(getMousePosition(event)).y
+    window.requestAnimationFrame(() => {
+        render.single(note.elements[app.elementSelected], app.elementSelected)
+        edit.selection.updatePosition(app.elementSelected)
+    })
 }
 edit.move.stop = function () {
     document.getElementsByClassName('element')[app.elementSelected].classList.remove('no-transition')
+    noteContent.classList.add('selectable')
     body.onmousemove = function () {}
     body.onmouseup = function () {}
 }
@@ -142,7 +136,7 @@ edit.selection.popup.newSection = function (args, i) {
     }
 
     let getRenderFunction = function (i) {
-        return `render.${note.elements[i].type}(note.elements[${i}], ${i})`
+        return `render.${note.elements[i].type}(note.elements[${i}], ${i});edit.selection.updatePosition(${i})`
     }
 
     let string = ''

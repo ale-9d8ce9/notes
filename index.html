@@ -30,6 +30,7 @@
         <div id="statusbar">
             <img src="icons/logout.svg" id="close-note" class="icon">
             <img src="icons/save.svg" id="save-note" class="icon">
+            <img src="icons/settings.svg" onclick="openOverlay('settings')" class="icon">
         </div>
     </div>
 
@@ -73,11 +74,32 @@
                 <button id="create-note" onclick="createNewNote('new note')">Create New Note</button>
                 <div class="overlay-x" onclick="openOverlay('login')"></div>
             </div>
+
+            <div class="overlay" id="settings">
+                <div class="overlay-title">Settings</div>
+                <div class="settings-item">
+                    <input type="range" min="0" max="360" class="hue-slider" id="hue-primary-slider">
+                    <input type="range" min="0" max="0.3" step="0.01" class="saturation-slider" id="saturation-primary-slider">
+                    <input type="range" min="0" max="100" class="lightness-slider" id="lightness-primary-slider">
+                </div>
+                <div class="settings-item">
+                    <input type="range" min="0" max="360" class="hue-slider" id="hue-secondary-slider">
+                    <input type="range" min="0" max="0.3" step="0.01" class="saturation-slider" id="saturation-secondary-slider">
+                    <input type="range" min="0" max="100" class="lightness-slider" id="lightness-secondary-slider">
+                </div>
+                <div class="settings-item">
+                    <input type="range" min="0" max="360" class="hue-slider" id="hue-bg-slider">
+                    <input type="range" min="0" max="0.3" step="0.01" class="saturation-slider" id="saturation-bg-slider">
+                    <input type="range" min="0" max="100" class="lightness-slider" id="lightness-bg-slider">
+                </div>
+                <div class="overlay-x"></div>
+            </div>
         </div>
     </div>
     <script src="scripts.js"></script>
     <script src="data.js"></script>
     <script src="edit.js"></script>
+    <script src="settings.js"></script>
     <script src="api.js"></script>
     <script src="render/ilham.js"></script>
     <script src="app.js"></script>
