@@ -3,7 +3,8 @@ class newNote {
         this.name = obj.name
         this.elements = []
         this.files = []
-
+        
+        this.filesToDelete = []
         this.dateModified = (new Date()).toISOString()
 
         if (obj.isNew) {
@@ -20,6 +21,9 @@ class newNote {
             this.elements = obj.elements
             this.files = obj.files
             this.version = obj.version
+            for (let i = 0; i < this.files.length; i++) {
+                this.elements[i].toUpload = false
+            }
         }
     }
     addElement(type, data, size) {
@@ -53,12 +57,13 @@ class newNote {
             if (i < 0 || i >= this.elements.length) {
                 throw new Error('Index out of bounds')
             }
-            this.elements[i].deleted = true
-            if (this.files[i] != null) {
-                this.files[i].deleted = true
+            if (this.elements[i].toUpload == false) {
+                this.filesToDelete.push(i)
             }
+            this.elements.splice(i, 1)
+            this.files.splice(i, 1)
             render.delete(i)
-            app.elementSelected == i ? edit.select(-1) : undefined
+            edit.select(-1)
         }
     }
     load() {
@@ -69,7 +74,7 @@ class newNote {
     }
     versionCheck() {
         if (this.version != app.buildVersion) {
-            loadScript('render/' + app.history[app.buildVersion].versionName + '.js')
+            loadScript('render/' + app.history[this.version].versionName + '.js')
             this.editable = false
         } else {
             this.editable = true
@@ -86,10 +91,12 @@ newElement = {
             this.width = -1
             this.height = -1
             this.text = text
-            
+
+            this.toUpload = true
+
             this.style = {
                 align: 'left',
-                font: 'Arial',
+                font: app.fonts[0],
                 textSize: 12,
                 color: '#ffffff',
                 background: '#ffffff00',
@@ -109,6 +116,8 @@ newElement = {
             this.width = size.x2 - size.x1
             this.height = size.y2 - size.y1
 
+            this.toUpload = true
+
             this.style = {
                 opacity: 1,
                 border: 'none',
@@ -122,8 +131,6 @@ newElement = {
 class newFile {
     constructor(data) {
         this.data = data
-        this.updated = true
-        this.deleted = false
     }
 }
 

@@ -12,6 +12,22 @@ app = {
     elementSelected:-1,
     initialWindowInnerWidth: window.innerWidth, // Store the initial window width
 
+    fonts: [
+        'Lexend',
+        'Cookie',
+        'Borel',
+        'SourGummy',
+        'Doto',
+        'Fredoka',
+        'GoogleSansCode',
+        'Marker',
+        'Monoton',
+        'PoiretOne',
+        'RampartOne',
+        'SourGummy-Italic',
+        'Monaspace-Krypton',
+    ],
+
     history: [
         {
             versionName: 'nutella',

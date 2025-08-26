@@ -36,7 +36,7 @@
 }
 
 #tools, #statusbar {
-    border-radius: var(--sidebar-icon-roundness);
+    border-radius: calc(var(--sidebar-icon-roundness) + var(--sidebar-icon-padding));
     overflow: hidden;
     padding: var(--sidebar-icon-padding);
 }
@@ -55,7 +55,4 @@
 }
 #sidebar .icon:active{
     scale: 0.9;
-}
-#tools .icon{
-    border-radius: 0;
 }

@@ -13,7 +13,6 @@ edit.selection.element.onmousedown = function () {edit.move.start(event)}
 
 document.getElementById('add-text').onclick = function () {
     noteWrapper.onclick = function (event) {
-        console.log('t')
         edit.text.add(event)
     }
 }
@@ -41,6 +40,8 @@ edit.select = function (i) {
         document.getElementById('element-' + i).classList.add('selected')
         edit.selection.popup.create(i)
         edit.selection.element.classList.add('show')
+    } else {
+        edit.selection.element.classList.remove('show')
     }
     edit.selection.updatePosition(i)
     app.elementSelected = i
@@ -52,9 +53,9 @@ edit.selection.updatePosition = function (i) {
         edit.selection.element.style.top = pos.top + 'px'
         edit.selection.element.style.width = pos.width + 'px'
         edit.selection.element.style.height = pos.height + 'px'
-        edit.selection.element.style.display = 'inherit'
+        edit.selection.element.classList.add('show')
     } else {
-        edit.selection.element.style.display = 'none'
+        edit.selection.element.classList.remove('show')
     }
 }
 
@@ -87,33 +88,36 @@ edit.move.stop = function () {
 
 edit.selection.popup.create = function (i) {
     edit.selection.element = document.getElementById('selection')
-    let popupHTML = edit.selection.popup.newSection({type: 'delete', onrun: `note.removeElement(${i})`}, i)
+    let popupHTML = edit.selection.popup.newSection({type: 'delete', onrun: `note.removeElement(${i})`, icon: 'delete'}, i)
 
     switch (note.elements[i].type) {
         case 'text':
              popupHTML += edit.selection.popup.newSection({
+                icon: 'fontSize',
                 type: 'slider',
                 name: 'textSize',
                 min: 8,
                 max: 50,
                 value: note.elements[i].style.textSize,
-                onrun: `note.elements[${i}].style.textSize = this.value`
+                onrun: `note.elements[${i}].style.textSize = parseFloat(this.value)`
             }, i)
             popupHTML += edit.selection.popup.newSection({
+                icon: 'align/' + note.elements[i].style.align,
                 type: 'radio',
                 name: 'align',
                 values: ['left', 'center', 'right', 'justify'],
-                checked: note.elements[i].style.textAlign,
-                onrun: `note.elements[${i}].style.textAlign = this.value`
+                checked: note.elements[i].style.align,
+                onrun: `note.elements[${i}].style.align = this.value`
             }, i)
             popupHTML += edit.selection.popup.newSection({
-                type: 'radio',
-                name: 'font',
-                values: ['Arial', 'Courier', 'Georgia', 'Times New Roman', 'Verdana'],
+                icon: 'font',
+                type: 'font',
+                values: app.fonts,
                 checked: note.elements[i].style.font,
                 onrun: `note.elements[${i}].style.font = this.value`
             }, i)
             popupHTML += edit.selection.popup.newSection({
+                icon: 'color',
                 type: 'color',
                 value: note.elements[i].style.color,
                 onrun: `note.elements[${i}].style.color = this.value`
@@ -124,13 +128,13 @@ edit.selection.popup.create = function (i) {
             edit.selection.element.innerHTML = ''
             break
     }
-    edit.selection.element.innerHTML = '<div id="selection-popup">' + popupHTML + '</div>'
+    edit.selection.element.innerHTML = '<div id="selection-popup" class="iconSet-h" onmousedown="event.stopPropagation()">' + popupHTML + '</div>'
 }
 
 
 edit.selection.popup.newSection = function (args, i) {
     // this function creates a new section in the popup
-    if (!args || !args.type || !args.onrun) {
+    if (!args || !args.type || !args.onrun || !args.icon) {
         console.error('Invalid arguments for newSection:', args)
         return ''
     }
@@ -142,29 +146,46 @@ edit.selection.popup.newSection = function (args, i) {
     let string = ''
     switch (args.type) {
         case 'delete':
-            string = `<button onclick="${args.onrun.toString()}">Delete</button>`
+            string = `<button onclick="${args.onrun}">Delete</button>`
             break
 
         case 'slider':
-            string = `<input type="range" min="${args.min}" max="${args.max}" value="${args.value}" oninput="${args.onrun.toString()};${getRenderFunction(i)}">`
+            string = `<input type="range" min="${args.min}" max="${args.max}" value="${args.value}" oninput="${args.onrun};${getRenderFunction(i)}">`
             break
 
         case 'color':
-            string = `<input type="color" value="${args.value}" onchange="${args.onrun.toString()};${getRenderFunction(i)}">`
+            string = `<input type="color" value="${args.value}" onchange="${args.onrun};${getRenderFunction(i)}">`
             break
 
         case 'radio':
             for (let j = 0; j < args.values.length; j++) {
-                string += `<input type="radio" name="edit-element-${i}-${args.name}" value="${args.values[j]}" onchange="${args.onrun.toString()};${getRenderFunction(i)}" checked="${args.checked == args.values[j]}">`
+                string += `<input type="radio" name="edit-element-${i}-${args.name}" value="${args.values[j]}" onchange="${args.onrun};${getRenderFunction(i)}" checked="${args.checked == args.values[j]}">`
             }
+            break
+        
+        case 'select':
+            for (let j = 0; j < args.values.length; j++) {
+                string += `<option value="${args.values[j]}" onchange="${args.onrun};${getRenderFunction(i)}" selected="${args.checked == args.values[j]}">${args.values[j]}</option>`
+            }
+            string = `<select onchange="${args.onrun};${getRenderFunction(i)}">${string}</select>`
+            break
+        
+        case 'font':
+            string += `<ul class="font-list">`
+            for (let j = 0; j < args.values.length; j++) {
+                string += `<li class="font-${args.values[j]}" onclick="${args.onrun.replace('this.value', `'${args.values[j]}'`)};${getRenderFunction(i)};">${args.values[j]}</li>`
+            }
+            string += `</ul>`
             break
 
         default:
             console.error('Unknown section type:', args.type)
     }
     return `
-        <div class="popup-section">
-            ${string}
+        <div class="popup-icon icon" style="background-image: url('./icons/${args.icon}.svg')">
+            <div class="popup-section">
+                ${string}
+            </div>
         </div>`
 }
 

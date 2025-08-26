@@ -184,11 +184,8 @@ async function saveNote(noteId) {
                 file = noteToUpload.files[i];
                 // if file exist
                 if (file != null) {
-                    if (file.updated == false && file.deleted != true) {
-                        // if file is not updated "remove" file from upload
-                        noteToUpload.files[i] = null
-                    } else if (file.deleted == true) {
-                        // if file is deleted remove its data from upload
+                    if (noteToUpload.elements[i].toUpload == false){
+                        // if file is not updated remove its data from upload
                         delete noteToUpload.files[i].data
                     }
                 }
@@ -205,37 +202,20 @@ async function saveNote(noteId) {
             if (result.result !== 'success') {
                 return false
             }
-
-            // after response
-            let filesToDelete = []
-            for (let i = 0; i < note.files.length; i++) {
-                // remove updated flag from files
-                if (note.files[i] != null) {
-                    note.files[i].updated = false
-                }
-                // schedule deletion of files / elements
-                if ((note.files[i] != null && note.files[i].deleted) || note.elements[i].deleted) {
-                    filesToDelete.push(i)
-                }
-            }
-
-            // delete files / elements
-            for (let i = filesToDelete.length - 1; i >= 0; i--) {
-                const j = filesToDelete[i];
-                note.files.splice(j, 1)
-                note.elements.splice(j, 1)
-                render.delete(j)
-            }
-
-            delete filesToDelete
             app.isSaving = false
 
         } catch (error) {
             console.error('Error saving note:', error)
             app.isSaving = false
+            updateSaveIcon()
             alert('Error saving note: ' + error.message)
             return false
         }
+        // after saving remove toUpload tag from all files
+        for (let i = 0; i < note.files.length; i++) {
+            note.elements[i].toUpload = false
+        }
+        note.filesToDelete = []
     } else {
         console.log('Note is not editable or is being saved')
     }

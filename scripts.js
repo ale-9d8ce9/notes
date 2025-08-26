@@ -89,6 +89,7 @@ function imageToBase64(imageFile, callback) {
 document.getElementById('close-note').onclick = function () {
     saveNote(app.noteId).then(function () {
         noteContent.innerHTML = ''
+        edit.selection.element.classList.remove('show')
         delete note
         document.querySelector('body').setAttribute('in-overlay', 'true')
         getListNotes(app.user.username, app.user.password)

@@ -47,7 +47,8 @@
 }
 
 #statusbar:has(.icon[show="true"]):not(:hover):not(:active):not(:focus-visible){
-    padding-left: calc(var(--sidebar-icon-size) + var(--sidebar-icon-padding));
+    padding-left: calc(var(--sidebar-icon-size) + (var(--sidebar-icon-padding) * 2));
+    padding-right: var(--sidebar-icon-padding);
 }
 
 #statusbar .icon[show="true"]{

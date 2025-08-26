@@ -1,6 +1,11 @@
 settings = {
-    minZoom: 0.1,
+    minZoom: 0.05,
     maxZoom: 20,
+    gestureSensitivity: {
+        moveWithCtrl: 1,
+        zoom: 0.01,
+        moveWithFinger: 2
+    }
 }
 
 settings.start = function () {

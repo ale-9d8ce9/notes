@@ -1,0 +1,171 @@
+@font-face {
+    font-family: 'Borel';
+    src: url('fonts/Borel.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cookie';
+    src: url('fonts/Cookie.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Doto';
+    src: url('fonts/Doto.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Fredoka';
+    src: url('fonts/Fredoka.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'GoogleSansCode';
+    src: url('fonts/GoogleSansCode.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Lexend';
+    src: url('fonts/Lexend.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Marker';
+    src: url('fonts/Marker.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Monaspace-Krypton';
+    src: url('fonts/Monaspace-Krypton.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Monoton';
+    src: url('fonts/Monoton.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PoiretOne';
+    src: url('fonts/PoiretOne.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'RampartOne';
+    src: url('fonts/RampartOne.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SourGummy';
+    src: url('fonts/SourGummy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SourGummy-Italic';
+    src: url('fonts/SourGummy-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'ui';
+    src: url('fonts/Lexend.ttf') format('truetype');
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+body, input, button {
+    font-family: 'ui', sans-serif;
+    font-weight: 300;
+    letter-spacing: .5px;
+    font-size: var(--ui-text-size);
+}
+.overlay-title, th {
+    font-weight: 500;
+    letter-spacing: 0;
+    font-size: var(--ui-text-size-bold);
+}
+.overlay-title {
+    font-size: calc(var(--ui-text-size-bold) * 1.2);
+}
+
+/* note-elements-classes */
+.font-Borel {
+    font-family: 'Borel', sans-serif;
+}
+.font-Cookie {
+    font-family: 'Cookie', sans-serif;
+}
+.font-Doto {
+    font-family: 'Doto', sans-serif;
+}
+.font-Fredoka {
+    font-family: 'Fredoka', sans-serif;
+}
+.font-GoogleSansCode {
+    font-family: 'GoogleSansCode', sans-serif;
+}
+.font-Lexend {
+    font-family: 'Lexend', sans-serif;
+}
+.font-Monaspace-Krypton {
+    font-family: 'Monaspace-Krypton', sans-serif;
+}
+.font-Marker {
+    font-family: 'Marker', sans-serif;
+}
+.font-Monoton {
+    font-family: 'Monoton', sans-serif;
+}
+.font-PoiretOne {
+    font-family: 'PoiretOne', sans-serif;
+}
+.font-RampartOne {
+    font-family: 'RampartOne', sans-serif;
+}
+.font-RubikGlitchPop {
+    font-family: 'RubikGlitchPop', sans-serif;
+}
+.font-SourGummy {
+    font-family: 'SourGummy', sans-serif;
+}
+.font-SourGummy-Italic {
+    font-family: 'SourGummy-Italic', sans-serif;
+}
