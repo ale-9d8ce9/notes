@@ -48,6 +48,7 @@ class newNote {
                 default:
                     throw new Error('Unknown type')
             }
+            edit.select(this.elements.length - 1)
         }
     }
     removeElement(i) {

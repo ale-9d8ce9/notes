@@ -163,3 +163,19 @@
 .font-list li:hover + li {
     border-color: var(--clr);
 }
+
+
+.popup-section input[type="radio"] {
+    appearance: none;
+    width: var(--edit-popup-icon-size);
+    height: var(--edit-popup-icon-size);
+    padding: var(--edit-popup-icon-padding);
+    background-color: var(--ui-bg);
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    box-sizing: content-box;
+}
+.popup-section input[type="radio"]:checked {
+    background-color: var(--clr-desat);
+}

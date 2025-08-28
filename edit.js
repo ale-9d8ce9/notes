@@ -103,6 +103,7 @@ edit.selection.popup.create = function (i) {
             }, i)
             popupHTML += edit.selection.popup.newSection({
                 icon: 'align/' + note.elements[i].style.align,
+                icons: ['align/left', 'align/center', 'align/right', 'align/justify'],
                 type: 'radio',
                 name: 'align',
                 values: ['left', 'center', 'right', 'justify'],
@@ -159,7 +160,12 @@ edit.selection.popup.newSection = function (args, i) {
 
         case 'radio':
             for (let j = 0; j < args.values.length; j++) {
-                string += `<input type="radio" name="edit-element-${i}-${args.name}" value="${args.values[j]}" onchange="${args.onrun};${getRenderFunction(i)}" checked="${args.checked == args.values[j]}">`
+                string += `<input type="radio"
+                    style="background-image: url('./icons/${args.icons[j]}.svg')"
+                    class="icon" name="edit-element-${i}-${args.name}"
+                    value="${args.values[j]}"
+                    onchange="${args.onrun};${getRenderFunction(i)};this.parentElement.parentElement.style.backgroundImage='url(./icons/${args.icons[j]}.svg)'" ${args.checked == args.values[j] ? 'checked' : ''}
+                >`
             }
             break
         
@@ -183,7 +189,7 @@ edit.selection.popup.newSection = function (args, i) {
     }
     return `
         <div class="popup-icon icon" style="background-image: url('./icons/${args.icon}.svg')">
-            <div class="popup-section">
+            <div class="popup-section${args.type == 'radio' ? ' iconSet-h' : ''}">
                 ${string}
             </div>
         </div>`

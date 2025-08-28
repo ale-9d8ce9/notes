@@ -103,9 +103,9 @@
     user-select: none !important;
     -webkit-user-select: none !important;
     -ms-user-select: none !important;
-    -moz-user-select: none !important;
     -webkit-touch-callout: none !important;
     transition-behavior: allow-discrete;
+    interpolate-size: allow-keywords;
 }
 
 
@@ -208,13 +208,6 @@ body[in-overlay="true"] > #wallpaper{
 
     *:hover {
         anchor-name: --hovered-item;
-    }
-}
-*/
-/* UNDER CONSIDERATION
-.list-mouseOverAnimation{
-    *:hover {
-        background-color: var(--clr-accent-desat);
     }
 }
 */

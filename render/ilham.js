@@ -11,7 +11,6 @@ render.all = function () {
 }
 
 render.single = function (data, i) {
-    console.log('Rendering element'+ i)
     if (!data.deleted) {
         switch (data.type) {
             case 'text':

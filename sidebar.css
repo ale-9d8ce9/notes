@@ -49,10 +49,3 @@
     padding: var(--sidebar-icon-padding);
     box-sizing: content-box;
 }
-#sidebar .icon:hover{
-    scale: 1.1;
-    transition: scale var(--transition-duration-button) ease, all var(--transition-duration);
-}
-#sidebar .icon:active{
-    scale: 0.9;
-}
