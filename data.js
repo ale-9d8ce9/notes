@@ -9,7 +9,7 @@ class newNote {
 
         if (obj.isNew) {
             this.dateCreated = (new Date()).toISOString()
-            this.version = app.buildVersion
+            this.version = app.renderVersion
             this.editable = true
             this.position = {
                 x: 0,
@@ -38,17 +38,20 @@ class newNote {
                     file = null
                     this.elements.push(element)
                     this.files.push(file)
+                    render.text(element, this.elements.length - 1)
                     break
                 case 'image':
                     element = new newElement.image(size)
                     file = new newFile(data)
                     this.elements.push(element)
                     this.files.push(file)
+                    render.image(element, this.elements.length - 1)
                     break
                 default:
                     throw new Error('Unknown type')
             }
             edit.select(this.elements.length - 1)
+            console.log('added ' + type)
         }
     }
     removeElement(i) {
@@ -65,6 +68,7 @@ class newNote {
             this.files.splice(i, 1)
             render.delete(i)
             edit.select(-1)
+            console.log('element ' + i + ' deleted')
         }
     }
     load() {
@@ -74,7 +78,7 @@ class newNote {
         render.all()
     }
     versionCheck() {
-        if (this.version != app.buildVersion) {
+        if (this.version != app.renderVersion) {
             loadScript('render/' + app.history[this.version].versionName + '.js')
             this.editable = false
         } else {

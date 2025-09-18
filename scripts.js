@@ -2,15 +2,40 @@ window.onload = start
 const body = document.querySelector('body')
 const noteContent = document.getElementById('note-content')
 const noteWrapper = document.getElementById('note-wrapper')
-convert = {}
-
+convert = {};
+[6,29,60,197,169,150,21,21,235,29,53,109,252,111,121,187,217,209,41,110,87,24,149,53,53,55,49,163,77,57,145,40]
 
 async function start() {
     settings.start()
+    openOverlay('setup')
+    document.getElementById('setup-url').value = localStorage.getItem('backend') || ''
+    document.getElementById('setup-key').value = localStorage.getItem('encryptionKey') || ''
+    app.useEncryption = localStorage.getItem('useEncryption') === 'true'
+    document.getElementById('setup-encryption').checked = app.useEncryption
+    document.getElementById('login-username').value = localStorage.getItem('username') || ''
+    document.getElementById('login-password').value = localStorage.getItem('password') || ''
+    // import encryption key (if exists)
+    try {
+        app.encryptionKey = document.getElementById('setup-key').value.trim().split(',')
+        if (app.encryptionKey.length != 32) {
+            app.encryptionKey = null
+            app.useEncryption = false
+            console.error('Error importing encryption key')
+        } else {
+            app.encryptionKey = await secure.importKey(app.encryptionKey)
+            console.log('Encryption key imported successfully')
+        }
+    } catch (e) {
+        console.error('Error importing encryption key:', e)
+        localStorage.removeItem('setup-key')
+        app.encryptionKey = null
+        if (app.useEncryption) return
+    }
     // check backend
     if (app.backend = localStorage.getItem('backend')) {
         if (await pingServer()) {
             // if backend respond try log in
+            app.user.username = localStorage.getItem('username') || ''
             app.user.username = localStorage.getItem('username') || ''
             app.user.password = localStorage.getItem('password') || ''
             if (app.user.username != '' && app.user.password != '') {
@@ -21,13 +46,7 @@ async function start() {
             } else {
                 openOverlay('login')
             }
-        } else {
-            app.backend = ''
-            openOverlay('setup')
         }
-    } else {
-        app.backend = ''
-        openOverlay('setup')
     }
 }
 
@@ -86,11 +105,34 @@ function imageToBase64(imageFile, callback) {
     }
 }
 
+async function arrayBufferToBase64 (buffer) {
+    const blob = new Blob([buffer])
+    const reader = new FileReader()
+    return new Promise((resolve) => {
+        reader.onload = () => resolve(reader.result.split(',')[1])
+        reader.readAsDataURL(blob)
+    })
+}
+
+async function base64ToArraybuffer (base64String) {
+    const blob = await fetch(`data:application/octet-stream;base64,${base64String}`).then(res => res.blob())
+    
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+        reader.readAsArrayBuffer(blob)
+    })
+}
+
+
+
+
 document.getElementById('close-note').onclick = function () {
     saveNote(app.noteId).then(function () {
         noteContent.innerHTML = ''
         edit.selection.element.classList.remove('show')
-        delete note
+        note = null
         document.querySelector('body').setAttribute('in-overlay', 'true')
         getListNotes(app.user.username, app.user.password)
     }

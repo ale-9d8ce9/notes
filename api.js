@@ -1,17 +1,23 @@
 
 async function apiRequest(request) {
+    app.encryptionKey == '' ? app.encryptionKey = null : undefined
     try {
         let url = app.backend + '?action=' + request.action
+        if (app.useEncryption) {
+            request = await secure.encrypt(JSON.stringify(request))
+        }
         response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(request),
             headers: {'Content-Type': 'text/plain'}
         })
         if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText)
+            throw new Error('response was not ok: ' + response.statusText)
         }
         response = await response.text()
-        console.log(JSON.parse(response))
+        if (app.useEncryption) {
+            response = await secure.decrypt(JSON.parse(response))
+        }
         return JSON.parse(response)
     } catch (error) {
         console.error('Error fetching data:', error)
@@ -55,7 +61,7 @@ async function getListNotes(username, password) {
         username: username,
         password: password
     })
-    console.log(notes)
+    console.log('listnotes', notes)
     if (notes.result == 'success') {
         // save login data
         app.user.username = username
@@ -144,7 +150,7 @@ async function addNote() {
         alert('Error adding note: ' + e)
 
         noteContent.innerHTML = ''
-        delete note
+        note = null
         document.querySelector('body').setAttribute('in-overlay', 'true')
         getListNotes(app.user.username, app.user.password)
 
@@ -248,6 +254,8 @@ async function pingServer(callback, errorCallback) {
     })
     if (response && response.result === 'success') {
         console.log('Server is reachable')
+        localStorage.setItem('useEncryption', app.useEncryption)
+        localStorage.setItem('encryptionKey', app.encryptionKey != null ? await secure.exportKey(app.encryptionKey) : '')
         if (callback) callback()
         return true
     } else {

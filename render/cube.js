@@ -32,7 +32,6 @@ render.delete = function (i) {
         element.remove()
     }
     for (let j = i; j < note.elements.length; j++) {
-        console.log(document.getElementById('element-' + (j + 1)))
         document.getElementById('element-' + (j + 1)).setAttribute('id', 'element-' + j)
         document.getElementById('element-data-' + (j + 1)).setAttribute('id', 'element-data-' + j)
         document.getElementById('element-' + j).setAttribute('onmousedown', 'edit.select(' + j + ')')

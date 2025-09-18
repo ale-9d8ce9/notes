@@ -42,6 +42,8 @@
             <div class="overlay" id="setup">
                 <div class="overlay-title">Setup</div>
                 <input type="text" id="setup-url" placeholder="backend URL" onchange="app.backend = this.value.trim()">
+                <input type="checkbox" onchange="app.useEncryption = this.checked" checked id="setup-encryption"><label for="setup-encryption">Use Encryption</label>
+                <input type="text" id="setup-key" placeholder="key (comma separated numbers)" oninput="secure.importKey(this.value.trim().split(',')).then(k => {app.encryptionKey = k})">
                 <div class="opposite">
                     <div></div>
                     <button id="ping-button" onclick="pingServer(function () {localStorage.setItem('backend', app.backend);openOverlay('login')})">Connect</button>
@@ -56,6 +58,7 @@
                     <button id="register-link" onclick="openOverlay('register')" class="secondary">Register</button>
                     <button id="login-button">Log In</button>
                 </div>
+                <div class="overlay-x" onclick="openOverlay('setup')"></div>
             </div>
 
             <div class="overlay" id="register">
@@ -103,7 +106,8 @@
     <script src="edit.js"></script>
     <script src="settings.js"></script>
     <script src="api.js"></script>
-    <script src="render/ilham.js"></script>
+    <script src="render/cube.js"></script>
     <script src="app.js"></script>
+    <script src="secure.js"></script>
 </body>
 </html>

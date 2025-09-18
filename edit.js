@@ -22,13 +22,11 @@ edit.text.add = function (event) {
     edit.vars.x1 = getMousePosition(event).x
     edit.vars.y1 = getMousePosition(event).y
     note.addElement('text', '', convert.toPoints({x1: edit.vars.x1, y1: edit.vars.y1}))
-    render.text(note.elements[note.elements.length - 1], note.elements.length - 1)
     document.getElementById('element-data-' + (note.elements.length - 1)).focus()
 }
 
 edit.image.add = function (base64String) {
     note.addElement('image', base64String, convert.toPoints({x1: 0, y1: 0, x2: 100, y2: 100}))
-    render.image(note.elements[note.elements.length - 1], note.elements.length - 1)
 }
 
 
