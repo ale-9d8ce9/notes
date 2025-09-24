@@ -60,9 +60,10 @@ render.text = function (data, i) {
     // Set the element data and values
     render.element.style.left = data.x + 'px'
     render.element.style.top = data.y + 'px'
-    
+
+    render.element.style.rotate = data.style.rotation + 'deg'
     render.elementData.innerText = data.text
-    note.editable ? render.elementData.contentEditable = true : undefined
+    note.editable ? render.elementData.contentEditable = 'plaintext-only' : undefined
     render.elementData.style.textAlign = data.style.align
     render.elementData.style.color = data.style.color
     render.elementData.style.fontFamily = data.style.font
@@ -89,8 +90,12 @@ render.image = function (data, i) {
     // Set the element data and values
     render.element.style.left = data.x + 'px'
     render.element.style.top = data.y + 'px'
+    render.element.style.rotate = data.style.rotation + 'deg'
 
     render.elementData.src = note.files[i].data
+
+    render.elementData.style.width = data.width * data.scale + 'px'
+    render.elementData.style.height = data.height * data.scale + 'px'
 
     if (!render.alreadyRendered) {
         // If the element does not exist add the new element to the note
@@ -128,7 +133,7 @@ render.gesture.wheel = function (event) {
     if (event.ctrlKey) {
         let mousex = (event.clientX - noteContent.getBoundingClientRect().left) / note.position.scale
         let mousey = (event.clientY - noteContent.getBoundingClientRect().top) / note.position.scale
-        let c = event.deltaY * note.position.scale * settings.gestureSensitivity.zoom
+        let c = (event.deltaY * note.position.scale) * settings.gestureSensitivity.zoom
         let initialScale = note.position.scale
 
         note.position.scale -= c

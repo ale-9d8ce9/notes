@@ -2,8 +2,7 @@ window.onload = start
 const body = document.querySelector('body')
 const noteContent = document.getElementById('note-content')
 const noteWrapper = document.getElementById('note-wrapper')
-convert = {};
-[6,29,60,197,169,150,21,21,235,29,53,109,252,111,121,187,217,209,41,110,87,24,149,53,53,55,49,163,77,57,145,40]
+convert = {}
 
 async function start() {
     settings.start()
@@ -88,7 +87,7 @@ document.addEventListener('paste', function(event) {
             const imageFile = items[i].getAsFile()
             imageToBase64(imageFile, function(base64String) {
                 // create image
-                edit.image.add(base64String)
+                edit.add.image(base64String)
             })
         }
     }
@@ -101,7 +100,7 @@ function imageToBase64(imageFile, callback) {
         callback(reader.result)
     }
     reader.onerror = function (error) {
-        console.log('Error: ', error)
+        console.error('Error: ', error)
     }
 }
 

@@ -1,8 +1,7 @@
 edit = {
     vars:{},
-    text:{},
-    image:{},
     move:{},
+    add:{},
     selection:{popup:{}}
 }
 edit.selection.element = document.getElementById('selection')
@@ -13,11 +12,11 @@ edit.selection.element.onmousedown = function () {edit.move.start(event)}
 
 document.getElementById('add-text').onclick = function () {
     noteWrapper.onclick = function (event) {
-        edit.text.add(event)
+        edit.add.text(event)
     }
 }
 
-edit.text.add = function (event) {
+edit.add.text = function (event) {
     noteWrapper.onclick = null
     edit.vars.x1 = getMousePosition(event).x
     edit.vars.y1 = getMousePosition(event).y
@@ -25,8 +24,12 @@ edit.text.add = function (event) {
     document.getElementById('element-data-' + (note.elements.length - 1)).focus()
 }
 
-edit.image.add = function (base64String) {
-    note.addElement('image', base64String, convert.toPoints({x1: 0, y1: 0, x2: 100, y2: 100}))
+edit.add.image = function (base64String) {
+    let img = new Image()
+    img.src = base64String
+    img.onload = function() {
+        note.addElement('image', base64String, {x: 0, y: 0, width: img.naturalWidth/app.initialWindowInnerWidth, height: img.naturalHeight/app.initialWindowInnerWidth})
+    }
 }
 
 
@@ -90,7 +93,17 @@ edit.selection.popup.create = function (i) {
 
     switch (note.elements[i].type) {
         case 'text':
-             popupHTML += edit.selection.popup.newSection({
+            popupHTML += edit.selection.popup.newSection({
+                icon: 'rotate',
+                type: 'slider',
+                name: 'rotation',
+                min: -180,
+                step: 15,
+                max: 180,
+                value: note.elements[i].style.rotation,
+                onrun: `note.elements[${i}].style.rotation = parseFloat(this.value)`
+            }, i)
+            popupHTML += edit.selection.popup.newSection({
                 icon: 'fontSize',
                 type: 'slider',
                 name: 'textSize',
@@ -122,7 +135,27 @@ edit.selection.popup.create = function (i) {
                 onrun: `note.elements[${i}].style.color = this.value`
             }, i)
             break
-    
+        case 'image':
+            popupHTML += edit.selection.popup.newSection({
+                icon: 'rotate',
+                type: 'slider',
+                name: 'rotation',
+                min: -180,
+                step: 15,
+                max: 180,
+                value: note.elements[i].style.rotation,
+                onrun: `note.elements[${i}].style.rotation = parseFloat(this.value)`
+            }, i)
+            popupHTML += edit.selection.popup.newSection({
+                icon: 'scale',
+                type: 'slider',
+                name: 'scale',
+                min: 0.05,
+                step: 0.05,
+                max: 10,
+                value: note.elements[i].scale,
+                onrun: `note.elements[${i}].scale = parseFloat(this.value)`
+            }, i)
         default:
             edit.selection.element.innerHTML = ''
             break
@@ -149,7 +182,7 @@ edit.selection.popup.newSection = function (args, i) {
             break
 
         case 'slider':
-            string = `<input type="range" min="${args.min}" max="${args.max}" value="${args.value}" oninput="${args.onrun};${getRenderFunction(i)}">`
+            string = `<input type="range" min="${args.min}" max="${args.max}" value="${args.value}" ${args.step ? `step="${args.step}"` : ''}oninput="${args.onrun};${getRenderFunction(i)}">`
             break
 
         case 'color':

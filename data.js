@@ -110,16 +110,21 @@ newElement = {
                 bold: false,
                 italic: false,
                 strikethrough: false,
+                rotation: 0
             }
         }
     }, image : class {
         constructor(size) {
             this.type = 'image'
             
-            this.x = size.x1
-            this.y = size.y1
-            this.width = size.x2 - size.x1
-            this.height = size.y2 - size.y1
+            this.x = size.x
+            this.y = size.y
+
+            this.scale = 1
+            this.width = size.width
+            this.naturalWidth = size.width
+            this.height = size.height
+            this.naturalHeight = size.height
 
             this.toUpload = true
 
@@ -128,7 +133,8 @@ newElement = {
                 border: 'none',
                 borderRadius: '0px',
                 boxShadow: 'none',
-                background: '#ffffff00'
+                background: '#ffffff00',
+                rotation: 0
             }
         }
     }

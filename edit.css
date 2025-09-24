@@ -1,6 +1,4 @@
-.popup-section{
-    display: flex;
-}
+
 
 #selection{
     padding: var(--selection-border-width);
@@ -14,7 +12,6 @@
     border-radius: var(--selection-border-roundness);
     scale: 0;
 }
-
 
 #selection.show{
     opacity: 1;
@@ -49,7 +46,7 @@
     height: 100%;
     z-index: -1;
 }
-#selection:not(:active):hover #selection-popup, #selection-popup:hover, #selection-popup:active{
+#selection:not(:active):hover #selection-popup, #selection-popup:hover, #selection-popup:active, #selection-popup:focus-within {
     opacity: 1;
     scale: 1;
     pointer-events: all;
@@ -100,9 +97,10 @@
     background-position: center;
     background-repeat: no-repeat;
 }
-.popup-icon .popup-section {
+.popup-icon .popup-section, #selection-popup:has(.popup-icon:focus-within) .popup-icon:not(:focus-within) .popup-section{
+    display: flex;
     position: absolute;
-    top: 0%;
+    top: -1rem;
     left: 50%;
     translate: -50% -50%;
     opacity: 0;
@@ -126,7 +124,7 @@
         padding: var(--ui-popup-hitbox-size);
     }
 }
-.popup-icon:hover .popup-section, .popup-section:active {
+.popup-icon:hover .popup-section, .popup-section:active, #selection-popup:has(.popup-icon:focus-within) .popup-icon:focus-within .popup-section {
     opacity: 1;
     scale: 1;
     top: -1rem;
@@ -138,6 +136,8 @@
     box-shadow: var(--ui-shadow-hover);
     background-color: var(--ui-bg-hover);
 }
+
+
 
 
 

@@ -23,14 +23,22 @@
     display: flex;
     translate: -50% -50%;
 
+    transition: 0s;
     pre {
-        transition: font-size 0s;
         div {
             font-size: inherit;
             font-family: inherit;
             color: inherit;
         }
     }
+    * {
+        transition: 0s;
+    }
+
+    /* &.selected{
+        outline: .5rem dotted var(--clr);
+        outline-offset: .2rem;
+    } */
 }
 
 .element img{
