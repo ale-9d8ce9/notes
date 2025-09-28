@@ -107,8 +107,8 @@ edit.selection.popup.create = function (i) {
                 icon: 'fontSize',
                 type: 'slider',
                 name: 'textSize',
-                min: 8,
-                max: 50,
+                min: 1,
+                max: 150,
                 value: note.elements[i].style.textSize,
                 onrun: `note.elements[${i}].style.textSize = parseFloat(this.value)`
             }, i)
@@ -135,6 +135,7 @@ edit.selection.popup.create = function (i) {
                 onrun: `note.elements[${i}].style.color = this.value`
             }, i)
             break
+
         case 'image':
             popupHTML += edit.selection.popup.newSection({
                 icon: 'rotate',

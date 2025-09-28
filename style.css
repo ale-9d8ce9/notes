@@ -30,9 +30,6 @@
     --overlay-padding-elements: 1rem;
     --overlay-title-bg: oklch(var(--clr-lightness) var(--clr-saturation) var(--clr-hue) / 0.51);
     --overlay-blur: 1rem;
-    --overlay-shadow:
-        0 0 15px 5px oklch(0% 0 0 / 0.231),
-        0 4px 25px 0 oklch(100% 0.00011 271.152 / 0.25) inset;
 
     --sidebar-icon-size: var(--ui-icon-size);
     --sidebar-icon-padding: var(--ui-icon-padding);
@@ -137,17 +134,21 @@ body{
     height: 100%;
     background-color: var(--page-bg);
 }
-
 body[in-overlay="true"] > *:not(#overlay){
     opacity: 0;
     pointer-events: none;
 }
-
 body[in-overlay="true"] > #wallpaper{
     opacity: 1;
     pointer-events: all;
 }
-
+body[loading="true"]{
+    cursor: wait;
+    filter: blur(3vw);
+    & > *{
+        pointer-events: none;
+    }
+}
 
 
 

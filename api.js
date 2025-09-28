@@ -6,6 +6,9 @@ async function apiRequest(request) {
         if (app.useEncryption) {
             request = await secure.encrypt(JSON.stringify(request))
         }
+        if (request.action != 'saveNote') {
+            document.querySelector('body').setAttribute('loading', 'true')
+        }
         response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(request),
@@ -18,9 +21,11 @@ async function apiRequest(request) {
         if (app.useEncryption) {
             response = await secure.decrypt(JSON.parse(response))
         }
+        document.querySelector('body').setAttribute('loading', 'false')
         return JSON.parse(response)
     } catch (error) {
         console.error('Error fetching data:', error)
+        document.querySelector('body').setAttribute('loading', 'false')
         return null
     }
 }
@@ -109,12 +114,16 @@ async function getListNotes(username, password) {
 
 async function getFullNote(noteId) {
     app.noteId = noteId
+    //document.querySelector('body').style.filter = 'blur(4vw)'
+    document.querySelector('body').style.pointerEvents = 'none'
     response = await apiRequest({
         action: 'getFullNote',
         username: app.user.username,
         password: app.user.password,
         noteId: noteId
     })
+    //document.querySelector('body').style.filter = 'blur(0px)'
+    document.querySelector('body').style.pointerEvents = 'inherit'
     if (response.result == 'success') {
         console.log('Note fetched successfully:', response.message)
         app.noteId = noteId

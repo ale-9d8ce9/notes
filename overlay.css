@@ -23,7 +23,7 @@
     background-color: var(--overlay-bg);
     padding: var(--overlay-padding);
     border-radius: var(--overlay-roundness);
-    box-shadow: var(--overlay-shadow);
+    border: var(--ui-elements-border-width) solid var(--clr-desat);
     backdrop-filter: blur(var(--overlay-blur));
 }
 .overlay[show]{
