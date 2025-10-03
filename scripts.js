@@ -198,3 +198,8 @@ document.querySelectorAll('.overlay-x').forEach(function (element) {
     // Add click event listener to close the overlay
     element.onclick = function () {openOverlay()}
 })
+
+// change fullscreen icon in statusbar
+document.addEventListener("fullscreenchange", (event) => {
+  document.getElementById('fullscreen-button').setAttribute('src', `icons/${document.fullscreenElement ? 'exit-fullscreen' : 'fullscreen'}.svg`)
+})

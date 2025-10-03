@@ -7,6 +7,16 @@
     height: 100%;
     overflow: hidden;
     background-color: var(--note-bg);
+
+    /* edge fade effect */
+    &::after{
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        box-shadow: inset 0 0 1rem 1rem var(--note-bg);
+    }
+
 }
 #note-content{
     position: absolute;
