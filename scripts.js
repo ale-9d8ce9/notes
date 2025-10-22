@@ -5,6 +5,12 @@ const noteWrapper = document.getElementById('note-wrapper')
 convert = {}
 
 async function start() {
+    if (window.location.search.includes('embed=macos')) {
+        document.getElementById('fullscreen-button').style.display = 'none'
+        document.getElementById('note-title').style.opacity = 0
+        document.getElementById('note-title').style.pointerEvents = 'none'
+        document.getElementById('note-title').style.scale = 0
+    }
     settings.start()
     openOverlay('setup')
     document.getElementById('setup-url').value = localStorage.getItem('backend') || ''
@@ -126,25 +132,6 @@ async function base64ToArraybuffer (base64String) {
 
 
 
-
-document.getElementById('close-note').onclick = function () {
-    saveNote(app.noteId).then(function () {
-        noteContent.innerHTML = ''
-        edit.selection.element.classList.remove('show')
-        note = null
-        document.querySelector('body').setAttribute('in-overlay', 'true')
-        getListNotes(app.user.username, app.user.password)
-    }
-    ).catch(function (error) {
-        console.error('Error saving note:', error)
-    })
-}
-document.getElementById('save-note').onclick = function () {
-    saveNote(app.noteId).catch(function (error) {
-        console.error('Error saving note:', error)
-        alert('Error saving note: ' + error)
-    })
-}
 
 
 getMousePosition = function (event) {

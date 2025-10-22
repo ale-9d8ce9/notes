@@ -161,7 +161,7 @@ edit.selection.popup.create = function (i) {
             edit.selection.element.innerHTML = ''
             break
     }
-    edit.selection.element.innerHTML = '<div id="selection-popup" class="iconSet-h" onmousedown="event.stopPropagation()">' + popupHTML + '</div>'
+    edit.selection.element.innerHTML = '<div id="selection-popup" class="h hover-list" onmousedown="event.stopPropagation()">' + popupHTML + '</div>'
 }
 
 
@@ -194,7 +194,7 @@ edit.selection.popup.newSection = function (args, i) {
             for (let j = 0; j < args.values.length; j++) {
                 string += `<input type="radio"
                     style="background-image: url('./icons/${args.icons[j]}.svg')"
-                    class="icon" name="edit-element-${i}-${args.name}"
+                    class="icon no-scale" name="edit-element-${i}-${args.name}"
                     value="${args.values[j]}"
                     onchange="${args.onrun};${getRenderFunction(i)};this.parentElement.parentElement.style.backgroundImage='url(./icons/${args.icons[j]}.svg)'" ${args.checked == args.values[j] ? 'checked' : ''}
                 >`
@@ -209,7 +209,7 @@ edit.selection.popup.newSection = function (args, i) {
             break
         
         case 'font':
-            string += `<ul class="font-list">`
+            string += `<ul class="select-list v">`
             for (let j = 0; j < args.values.length; j++) {
                 string += `<li class="font-${args.values[j]}" onclick="${args.onrun.replace('this.value', `'${args.values[j]}'`)};${getRenderFunction(i)};">${args.values[j]}</li>`
             }
@@ -220,8 +220,8 @@ edit.selection.popup.newSection = function (args, i) {
             console.error('Unknown section type:', args.type)
     }
     return `
-        <div class="popup-icon icon" style="background-image: url('./icons/${args.icon}.svg')">
-            <div class="popup-section${args.type == 'radio' ? ' iconSet-h' : ''}">
+        <div class="popup-icon icon no-scale" style="background-image: url('./icons/${args.icon}.svg')">
+            <div class="popup-section${args.type == 'radio' ? ' select-list h' : ''}">
                 ${string}
             </div>
         </div>`

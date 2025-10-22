@@ -2,48 +2,30 @@
     --note-bg: oklch(0% 0 0);
     --page-bg: var(--note-bg);
 
-    --test: oklch(100% 0.00011 271.152);
+    --clr: oklch(0.7 0.2 156.18);
+    --clr-desat: oklch(from var(--clr) l 0.10 h / 0.3);
 
-    --clr-hue: 225;
-    --clr-saturation: 0.15;
-    --clr-lightness: 70%;
+    --clr-secondary: oklch(0.76 0.15 214.97);
+    --clr-secondary-desat: oklch(from var(--clr-secondary) calc(l + 10%) 0.10 h / 0.3);
+    --clr-secondary-desat: oklch(from var(--clr-secondary) calc(l + 10) 0.10 h / 0.3);
 
-    --clr-accent-hue: 300;
-    --clr-accent-saturation: calc(var(--clr-saturation) * 0.8);
-    --clr-accent-lightness: var(--clr-lightness);
+    --clr-bg: oklch(0.27 0.02 150.4 / 0.5);
 
-    --clr-bg-hue: 250;
-    --clr-bg-saturation: 0.02;
-    --clr-bg-lightness: var(--clr-lightness);
-
-    --clr: oklch(var(--clr-lightness)  var(--clr-saturation) var(--clr-hue));
-    --clr-desat: oklch(calc(var(--clr-lightness) + 10%) 0.10 var(--clr-hue) / 0.3);
-    --clr-accent: oklch(var(--clr-accent-lightness) var(--clr-accent-saturation) var(--clr-accent-hue));
-    --clr-accent-desat: oklch(calc(var(--clr-accent-lightness) + 10%) 0.10 var(--clr-accent-hue) / 0.3);
-    --clr-bg: oklch(var(--clr-bg-lightness)  var(--clr-bg-saturation) var(--clr-bg-hue) / 0.3);
     --clr-text: oklch(100% 0.00011 271.152);
     --clr-text-alt: oklch(0% 0 0);
 
-    --overlay-bg: oklch(calc(var(--clr-bg-lightness) * 0.8) calc(var(--clr-bg-saturation) * 0.7) var(--clr-bg-hue) / 0.32);
+    --overlay-bg: var(--clr-bg);
     --overlay-padding: 1rem;
     --overlay-roundness: 1.5rem;
     --overlay-padding-elements: 1rem;
-    --overlay-title-bg: oklch(var(--clr-lightness) var(--clr-saturation) var(--clr-hue) / 0.51);
+    --overlay-title-bg: oklch(from var(--clr-secondary) l c h / 0.51);
     --overlay-blur: 1rem;
-
-    --sidebar-icon-size: var(--ui-icon-size);
-    --sidebar-icon-padding: var(--ui-icon-padding);
-    --sidebar-icon-roundness: var(--ui-icon-roundness);
-
-    --edit-popup-icon-size: var(--ui-icon-size);
-    --edit-popup-icon-padding: var(--ui-icon-padding);
-    --edit-popup-icon-roundness: var(--ui-icon-roundness);
 
     --ui-blur: .2rem;
     --ui-blur-hover: calc(var(--ui-blur) * 3);
 
-    --ui-bg: oklch(53.824% min(var(--clr-saturation), 0.04) var(--clr-hue) / 0.228);
-    --ui-bg-hover: oklch(32.109% min(var(--clr-saturation), 0.08) var(--clr-hue) / 0.211);
+    --ui-bg: oklch(from var(--clr) 53.824% min(c, 0.04) h / 0.228);
+    --ui-bg-hover: oklch(from var(--clr) 32.109% min(c, 0.08) h / 0.211);
 
     --ui-shadow:
         0 0 10px 0 oklch(0% 0 0 / 0.502),
@@ -64,14 +46,15 @@
     --ui-icon-roundness: 1rem;
     --ui-icon-roundness-small: .3rem;
     --ui-icon-padding: .5rem;
+    --ui-icon-hover-scale: 1.15;
 
-    --ui-popup-hitbox-size: 1rem; /* ::before pseudo-element padding for most popups */
+    --ui-popup-hitbox-size: 1rem; /*::before pseudo-element padding for most popups*/
 
     --selection-border-width: .2rem;
     --selection-border-offset: .4rem;
     --selection-border-roundness: .4rem;
-    --selection-border-color1: oklch(var(--clr-lightness) var(--clr-saturation) calc(var(--clr-hue) - 60));
-    --selection-border-color2: oklch(var(--clr-lightness) var(--clr-saturation) calc(var(--clr-hue) + 60));
+    --selection-border-color1: oklch(from var(--clr) l c calc(h - 60));
+    --selection-border-color2: oklch(from var(--clr) l c calc(h + 60));
 
     --settings-bg: var(--overlay-bg);
     --settings-padding: var(--overlay-padding);
@@ -82,6 +65,7 @@
     --ui-text-size-bold: 1.3rem;
 
     --transition-duration: 0.3s;
+    --transition-duration-fast: 0.2s;
     --transition-duration-button: 0.1s;
 }
 
@@ -101,7 +85,6 @@
     -webkit-user-select: none !important;
     -ms-user-select: none !important;
     -webkit-touch-callout: none !important;
-    transition-behavior: allow-discrete;
     interpolate-size: allow-keywords;
 }
 
@@ -113,6 +96,9 @@
 
 .no-transition{
     transition: 0s !important;
+}
+.no-scale{
+    scale: 1 !important;
 }
 
 .dragging{
@@ -171,26 +157,23 @@ body[loading="true"]{
 
 
 
-
-
-/* icon rows/columns for examples #tools, #statusbar and #selection-popup */
-.iconSet-h > .icon, .iconSet-v > .icon {
-    border-radius: var(--ui-icon-roundness-small);
+.icon{
+    cursor: pointer;
+    width: var(--ui-icon-size);
+    height: var(--ui-icon-size);
+    display: block;
+    padding: var(--ui-icon-padding);
+    box-sizing: content-box;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.icon:hover{
+    scale: var(--ui-icon-hover-scale);
 }
 
-.iconSet-v > .icon:first-child{border-radius: var(--ui-icon-roundness) var(--ui-icon-roundness) var(--ui-icon-roundness-small) var(--ui-icon-roundness-small);} 
-.iconSet-v > .icon:last-child{border-radius: var(--ui-icon-roundness-small) var(--ui-icon-roundness-small) var(--ui-icon-roundness) var(--ui-icon-roundness);}
-.iconSet-h > .icon:first-child{border-radius: var(--ui-icon-roundness) var(--ui-icon-roundness-small) var(--ui-icon-roundness-small) var(--ui-icon-roundness);}
-.iconSet-h > .icon:last-child{border-radius: var(--ui-icon-roundness-small) var(--ui-icon-roundness) var(--ui-icon-roundness) var(--ui-icon-roundness-small);}
-.iconSet-v > .icon:first-child:last-child, .iconSet-h > .icon:first-child:last-child{border-radius: var(--ui-icon-roundness) var(--ui-icon-roundness) var(--ui-icon-roundness) var(--ui-icon-roundness);}
 
-.iconSet-h > .icon:hover, .iconSet-v > .icon:hover{
-    background-color: var(--clr-accent-desat);
-}
 
-/*  WAITING FOR WEBKIT SUPPORT TO ENABLE (safari 26)
-.list-mouseOverAnimation{
-    position: relative;
+.hover-list{
     anchor-name: --hovered-item;
 
     &::after{
@@ -200,15 +183,75 @@ body[loading="true"]{
         left: anchor(left);
         right: anchor(right);
         bottom: anchor(bottom);
-        background: rgba(23, 209, 29, 0.335);
-        border-radius: inherit;
+        background: var(--clr-secondary-desat);
+        border-radius: var(--ui-icon-roundness-small);
         pointer-events: none;
-        transition: 1s;
+        transition: var(--transition-duration-fast);
         position-anchor: --hovered-item;
+        scale: 0;
+        z-index: -1;
     }
-
-    *:hover {
+    &:has(> *:hover)::after{
+        scale: 1;
+    }
+    & > *:hover {
         anchor-name: --hovered-item;
     }
+
+    /* round corners dinamically depending on the hovered item position */
+    &.h:has(> *:first-child:hover)::after {
+        border-radius: var(--ui-icon-roundness) var(--ui-icon-roundness-small) var(--ui-icon-roundness-small) var(--ui-icon-roundness);
+    }
+    &.h:has(> *:last-child:hover)::after {
+        border-radius: var(--ui-icon-roundness-small) var(--ui-icon-roundness) var(--ui-icon-roundness) var(--ui-icon-roundness-small);
+    }
+    &.v:has(> *:first-child:hover)::after {
+        border-radius: var(--ui-icon-roundness) var(--ui-icon-roundness) var(--ui-icon-roundness-small) var(--ui-icon-roundness-small);
+    }
+    &.v:has(> *:last-child:hover)::after {
+        border-radius: var(--ui-icon-roundness-small) var(--ui-icon-roundness-small) var(--ui-icon-roundness) var(--ui-icon-roundness);
+    }
+    &.v:has(> *:first-child:last-child)::after, &.h:has(> *:first-child:last-child)::after {
+        border-radius: var(--ui-icon-roundness);
+    }
 }
-*/
+
+
+
+
+
+.select-list.h > * {
+    border-left: 1px solid var(--clr-desat);
+    &:first-child {
+        border-left: none;
+        border-radius: var(--ui-elements-roundness) 0 0 var(--ui-elements-roundness);
+    }
+    &:last-child {
+        border-radius: 0 var(--ui-elements-roundness) var(--ui-elements-roundness) 0;
+    }
+}
+.select-list.v > * {
+    border-top: 1px solid var(--clr-desat);
+    &:first-child {
+        border-top: none;
+        border-radius: var(--ui-elements-roundness) var(--ui-elements-roundness) 0 0;
+    }
+    &:last-child {
+        border-radius: 0 0 var(--ui-elements-roundness) var(--ui-elements-roundness);
+    }
+}
+.select-list > * {
+    padding: var(--ui-elements-padding);
+    display: block;
+    white-space: nowrap;
+
+    &:hover {
+        border-color: var(--clr);
+        background-color: var(--clr-secondary-desat);
+
+        & + * {
+            border-color: var(--clr);
+        }
+    }
+}
+

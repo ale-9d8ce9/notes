@@ -58,6 +58,27 @@ document.getElementById('login-button').onclick = async function () {
     }
 }
 
+document.getElementById('close-note').onclick = async function () {
+    if (await saveNote(app.noteId).catch(function (error) {
+        console.error('Error saving note:', error)
+    })) {
+        // saved successfully
+        noteContent.innerHTML = ''
+        edit.selection.element.classList.remove('show')
+        note = null
+        document.title = app.titleName
+        document.querySelector('body').setAttribute('in-overlay', 'true')
+        getListNotes(app.user.username, app.user.password)
+    }
+}
+document.getElementById('save-note').onclick = function () {
+    saveNote(app.noteId).catch(function (error) {
+        console.error('Error saving note:', error)
+        alert('Error saving note: ' + error)
+    })
+}
+
+
 
 async function getListNotes(username, password) {
     openOverlay('listNotes')
@@ -66,6 +87,7 @@ async function getListNotes(username, password) {
         username: username,
         password: password
     })
+    document.title = app.titleName
     console.log('listnotes', notes)
     if (notes.result == 'success') {
         // save login data
@@ -114,7 +136,6 @@ async function getListNotes(username, password) {
 
 async function getFullNote(noteId) {
     app.noteId = noteId
-    //document.querySelector('body').style.filter = 'blur(4vw)'
     document.querySelector('body').style.pointerEvents = 'none'
     response = await apiRequest({
         action: 'getFullNote',
@@ -122,7 +143,6 @@ async function getFullNote(noteId) {
         password: app.user.password,
         noteId: noteId
     })
-    //document.querySelector('body').style.filter = 'blur(0px)'
     document.querySelector('body').style.pointerEvents = 'inherit'
     if (response.result == 'success') {
         console.log('Note fetched successfully:', response.message)
@@ -137,10 +157,12 @@ async function getFullNote(noteId) {
             version: response.version
         })
         document.getElementById('note-title').value = note.name
+        document.title = app.titleName + ' - ' + note.name
         note.load()
         return true
     } else {
-        console.error('Error fetching note:', note.message)
+        console.error('Error fetching note:', response.message)
+        alert('Error fetching note: ' + response.message)
         return false
     }
 }
@@ -215,6 +237,10 @@ async function saveNote(noteId) {
                 note: JSON.stringify(noteToUpload)
             })
             if (result.result !== 'success') {
+                console.error('Error saving note:', result.message)
+                app.isSaving = false
+                updateSaveIcon()
+                alert('Error saving note: ' + result.message)
                 return false
             }
             app.isSaving = false

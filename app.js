@@ -1,5 +1,6 @@
 app = {
     versionName: 'cube',
+    titleName: 'Notes',
     renderVersion: 1,
     version: '0.1.0',
     backend: '',
@@ -16,18 +17,18 @@ app = {
 
     fonts: [
         'Lexend',
+        'Fredoka',
         'Cookie',
         'Borel',
-        'SourGummy',
-        'Doto',
-        'Fredoka',
-        'GoogleSansCode',
         'Marker',
-        'Monoton',
-        'PoiretOne',
-        'RampartOne',
+        'SourGummy',
         'SourGummy-Italic',
+        'GoogleSansCode',
         'Monaspace-Krypton',
+        'PoiretOne',
+        'Monoton',
+        'RampartOne',
+        'Doto',
     ],
 
     history: [

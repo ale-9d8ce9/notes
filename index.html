@@ -24,12 +24,12 @@
     <div id="selection"></div>
 
     <div id="sidebar">
-        <input type="text" id="note-title" placeholder="Note Title" oninput="note.name = this.value.trim()">
-        <div id="tools" class="list-mouseOverAnimation iconSet-v">
+        <input type="text" id="note-title" placeholder="Note Title" oninput="note.name = this.value.trim(); document.title = app.titleName + ' - ' + note.name">
+        <div id="tools" class="hover-list v">
             <img src="icons/add-text.svg" id="add-text" class="icon">
             <img src="icons/add-image.svg" id="add-image" class="icon">
         </div>
-        <div id="statusbar" class="list-mouseOverAnimation iconSet-h">
+        <div id="statusbar" class="hover-list h">
             <img src="icons/logout.svg" id="close-note" class="icon">
             <img src="icons/save.svg" id="save-note" class="icon">
             <img src="icons/fullscreen.svg" id="fullscreen-button" class="icon" onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()">
@@ -84,19 +84,13 @@
             <div class="overlay" id="settings">
                 <div class="overlay-title">Settings</div>
                 <div class="settings-item">
-                    <input type="range" min="0" max="360" class="hue-slider" id="hue-primary-slider">
-                    <input type="range" min="0" max="0.3" step="0.01" class="saturation-slider" id="saturation-primary-slider">
-                    <input type="range" min="0" max="100" class="lightness-slider" id="lightness-primary-slider">
+                    <input type="range" min="1" max="3.5" step="0.5" id="settings-moveWithCtrl" class="settings-slider">
+                    <input type="range" min="1" max="3.5" step="0.5" id="settings-moveWithFinger" class="settings-slider">
+                    <input type="range" min="0.005" max="0.025" step="0.002" id="settings-zoom" class="settings-slider">
                 </div>
                 <div class="settings-item">
-                    <input type="range" min="0" max="360" class="hue-slider" id="hue-secondary-slider">
-                    <input type="range" min="0" max="0.3" step="0.01" class="saturation-slider" id="saturation-secondary-slider">
-                    <input type="range" min="0" max="100" class="lightness-slider" id="lightness-secondary-slider">
-                </div>
-                <div class="settings-item">
-                    <input type="range" min="0" max="360" class="hue-slider" id="hue-bg-slider">
-                    <input type="range" min="0" max="0.3" step="0.01" class="saturation-slider" id="saturation-bg-slider">
-                    <input type="range" min="0" max="100" class="lightness-slider" id="lightness-bg-slider">
+                    <input type="color" id="settings-clr" class="settings-color">
+                    <input type="color" id="settings-clr-secondary" class="settings-color">
                 </div>
                 <div class="overlay-x"></div>
             </div>

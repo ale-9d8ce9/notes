@@ -2,18 +2,19 @@
 #statusbar{
     display: inline-flex;
     position: relative;
-    padding-left: calc(var(--sidebar-icon-size) + var(--sidebar-icon-padding) * 2);
-    padding-right: calc(var(--sidebar-icon-padding) * 2);
+    padding-left: calc(var(--ui-icon-size) + var(--ui-icon-padding) * 2);
+    padding-right: calc(var(--ui-icon-padding) * 2);
 }
 
 #statusbar::before{
+    /* more icon */
     content: '';
     position: absolute;
     top: 50%;
-    left: calc(var(--sidebar-icon-padding) * 2);
+    left: calc(var(--ui-icon-padding) * 2);
     translate: 0 -50%;
-    width: var(--sidebar-icon-size);
-    height: var(--sidebar-icon-size);
+    width: var(--ui-icon-size);
+    height: var(--ui-icon-size);
     z-index: -1;
     background-image: url(icons/more.svg);
     background-size: contain;
@@ -29,33 +30,33 @@
     scale: 0;
 }
 #statusbar:hover, #statusbar:active, #statusbar:focus-visible{
-    padding-left: var(--sidebar-icon-padding);
-    padding-right: var(--sidebar-icon-padding);
+    padding-left: var(--ui-icon-padding);
+    padding-right: var(--ui-icon-padding);
 }
 
 #statusbar .icon{
     opacity: 0;
     filter: blur(.5rem);
     width: 0;
-    padding: var(--sidebar-icon-padding) 0;
+    padding: var(--ui-icon-padding) 0;
 }
 #statusbar:hover .icon, #statusbar:active .icon, #statusbar:focus-visible .icon{
     opacity: 1;
     filter: blur(0);
-    width: var(--sidebar-icon-size);
-    padding: var(--sidebar-icon-padding);
+    width: var(--ui-icon-size);
+    padding: var(--ui-icon-padding);
 }
 
 #statusbar:has(.icon[show="true"]):not(:hover):not(:active):not(:focus-visible){
-    padding-left: calc(var(--sidebar-icon-size) + (var(--sidebar-icon-padding) * 2));
-    padding-right: var(--sidebar-icon-padding);
+    padding-left: calc(var(--ui-icon-size) + (var(--ui-icon-padding) * 2));
+    padding-right: var(--ui-icon-padding);
 }
 
 #statusbar .icon[show="true"]{
     opacity: 1;
     filter: blur(0);
-    width: var(--sidebar-icon-size);
-    padding: var(--sidebar-icon-padding);
+    width: var(--ui-icon-size);
+    padding: var(--ui-icon-padding);
 }
 
 

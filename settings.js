@@ -9,51 +9,29 @@ settings = {
 }
 
 settings.start = function () {
-    document.getElementById("hue-primary-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-accent-hue", this.value)
-        this.setAttribute("data-value", this.value)
-    })
-    document.getElementById("saturation-primary-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-accent-saturation", this.value)
-        this.setAttribute("data-value", this.value)
-    })
-    document.getElementById("lightness-primary-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-accent-lightness", this.value + "%")
-        this.setAttribute("data-value", this.value)
-    })
-    
-    document.getElementById("hue-secondary-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-hue", this.value)
-        this.setAttribute("data-value", this.value)
-    })
-    document.getElementById("saturation-secondary-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-saturation", this.value)
-        this.setAttribute("data-value", this.value)
-    })
-    document.getElementById("lightness-secondary-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-lightness", this.value + "%")
-        this.setAttribute("data-value", this.value)
-    })
-    
-    document.getElementById("hue-bg-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-bg-hue", this.value)
-        this.setAttribute("data-value", this.value)
-    })
-    document.getElementById("saturation-bg-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-bg-saturation", this.value)
-        this.setAttribute("data-value", this.value)
-    })
-    document.getElementById("lightness-bg-slider").addEventListener("input", function() {
-        document.documentElement.style.setProperty("--clr-bg-lightness", this.value + "%")
-        this.setAttribute("data-value", this.value)
-    })
-    
-    document.getElementById("hue-primary-slider").setAttribute("data-value", document.documentElement.style.getPropertyValue("--clr-hue"))
-    document.getElementById("saturation-primary-slider").setAttribute("data-value", document.documentElement.style.getPropertyValue("--clr-saturation"))
-    document.getElementById("lightness-primary-slider").setAttribute("data-value", document.documentElement.style.getPropertyValue("--clr-lightness"))
-    document.getElementById("hue-primary-slider").setAttribute("value", parseFloat(document.documentElement.style.getPropertyValue("--clr-hue")))
-    document.getElementById("saturation-primary-slider").setAttribute("value", parseFloat(document.documentElement.style.getPropertyValue("--clr-saturation")))
-    document.getElementById("lightness-primary-slider").setAttribute("value", parseFloat(document.documentElement.style.getPropertyValue("--clr-lightness")))
+    document.getElementById("settings-moveWithCtrl").value = settings.gestureSensitivity.moveWithCtrl
+    document.getElementById("settings-moveWithCtrl").onchange = function () {
+        settings.gestureSensitivity.moveWithCtrl = parseFloat(this.value)
+    }
 
+    document.getElementById("settings-moveWithFinger").value = settings.gestureSensitivity.moveWithFinger
+    document.getElementById("settings-moveWithFinger").onchange = function () {
+        settings.gestureSensitivity.moveWithFinger = parseFloat(this.value)
+    }
+
+    document.getElementById("settings-zoom").value = settings.gestureSensitivity.zoom
+    document.getElementById("settings-zoom").onchange = function () {
+        settings.gestureSensitivity.zoom = parseFloat(this.value)
+    }
+
+    document.getElementById("settings-clr").value = getComputedStyle(document.documentElement).getPropertyValue('--clr').trim()
+    document.getElementById("settings-clr").onchange = function () {
+        document.documentElement.style.setProperty('--clr', this.value)
+    }
+
+    document.getElementById("settings-clr-secondary").value = getComputedStyle(document.documentElement).getPropertyValue('--clr-secondary').trim()
+    document.getElementById("settings-clr-secondary").onchange = function () {
+        document.documentElement.style.setProperty('--clr-secondary', this.value)
+    }
 }
     

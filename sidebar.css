@@ -36,16 +36,8 @@
 }
 
 #tools, #statusbar {
-    border-radius: calc(var(--sidebar-icon-roundness) + var(--sidebar-icon-padding));
+    border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
     overflow: hidden;
-    padding: var(--sidebar-icon-padding);
+    padding: var(--ui-icon-padding);
 }
 
-#sidebar .icon{
-    cursor: pointer;
-    width: var(--sidebar-icon-size);
-    height: var(--sidebar-icon-size);
-    display: block;
-    padding: var(--sidebar-icon-padding);
-    box-sizing: content-box;
-}

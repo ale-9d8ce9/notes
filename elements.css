@@ -8,9 +8,9 @@ input[type="text"], input[type="password"], button{
 input[type="text"], input[type="password"]{
     width: 100%;
 }
-input[type="text"]:focus, input[type="password"]:focus, button:focus{
-    border-color: var(--clr-accent);
-    background-color: var(--clr-accent-desat);
+input[type="text"]:focus, input[type="password"]:focus{
+    border-color: var(--clr-secondary);
+    background-color: var(--clr-secondary-desat);
 }
 input[type="text"]:hover, input[type="password"]:hover{
     border-color: var(--clr);
@@ -29,7 +29,7 @@ input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     width: 1rem;
     height: 1rem;
-    background-color: var(--clr-accent);
+    background-color: var(--clr-secondary);
     border-radius: 50%;
     cursor: pointer;
     transition: var(--transition-duration-button) ease;
@@ -41,6 +41,7 @@ input[type="range"]:active::-webkit-slider-thumb {
     scale: 0.9;
 }
 
+
 button{
     cursor: pointer;
     background-color: var(--clr-desat);
@@ -49,7 +50,7 @@ button{
 }
 button.secondary{
     background-color: transparent;
-    border-color: var(--clr-accent-desat);
+    border-color: var(--clr-secondary-desat);
     color: var(--clr-text);
 }
 button:hover{
@@ -57,18 +58,18 @@ button:hover{
     scale: 1.05;
 }
 button.secondary:hover{
-    border-color: var(--clr-accent);
-    background-color: var(--clr-accent-desat);
+    border-color: var(--clr-secondary);
+    background-color: var(--clr-secondary-desat);
 }
-button:active{
+button:active, button:focus-visible{
     background-color: var(--clr);
     border-color: transparent;
     color: var(--clr-text-alt);
     scale: 0.95;
 }
-button.secondary:active{
-    background-color: var(--clr-accent-desat);
-    border-color: var(--clr-accent);
+button.secondary:active, button.secondary:focus-visible{
+    background-color: var(--clr-secondary-desat);
+    border-color: var(--clr-secondary);
     color: var(--clr-text);
 }
 
