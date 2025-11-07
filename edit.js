@@ -2,9 +2,10 @@ edit = {
     vars:{},
     move:{},
     add:{},
-    selection:{popup:{}}
+    selection:{popup:{}, enableTransitions: true}
 }
 edit.selection.element = document.getElementById('selection')
+edit.selection.popupElement = document.getElementById('selection-popup')
 
 
 edit.selection.element.onmousedown = function () {edit.move.start(event)}
@@ -15,6 +16,23 @@ document.getElementById('add-text').onclick = function () {
         edit.add.text(event)
     }
 }
+document.getElementById('add-image').onclick = function () {
+    let input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
+    input.onchange = e => {
+        let file = e.target.files[0]
+        imageToBase64(file, function(base64String) {
+            // create image
+            edit.add.image(base64String)
+        })
+    }
+    input.click()
+}
+document.getElementById('add-audio').onclick = function () {
+    openOverlay('add-audio')
+}
+
 
 edit.add.text = function (event) {
     noteWrapper.onclick = null
@@ -27,18 +45,27 @@ edit.add.text = function (event) {
 edit.add.image = function (base64String) {
     let img = new Image()
     img.src = base64String
+
     img.onload = function() {
-        note.addElement('image', base64String, {x: 0, y: 0, width: img.naturalWidth/app.initialWindowInnerWidth, height: img.naturalHeight/app.initialWindowInnerWidth})
+        let width = img.naturalWidth/app.initialWindowInnerWidth
+        let height = img.naturalHeight/app.initialWindowInnerWidth
+        // get center position
+        let x = window.innerWidth / 2 - width / 2
+        let y = window.innerHeight / 2 - height / 2
+        let position = convert.toPoints(getMousePosition({clientX: x, clientY: y}))
+
+        note.addElement('image', base64String, {
+            x: position.x,
+            y: position.y,
+            width: width,
+            height: height
+        })
     }
 }
 
 
 edit.select = function (i) {
-    for (let i = 0; i < document.getElementsByClassName('element').length; i++) {
-        document.getElementsByClassName('element')[i].classList.remove('selected')
-    }
     if (i != -1) {
-        document.getElementById('element-' + i).classList.add('selected')
         edit.selection.popup.create(i)
         edit.selection.element.classList.add('show')
     } else {
@@ -54,7 +81,13 @@ edit.selection.updatePosition = function (i) {
         edit.selection.element.style.top = pos.top + 'px'
         edit.selection.element.style.width = pos.width + 'px'
         edit.selection.element.style.height = pos.height + 'px'
+        edit.selection.element.style.setProperty('--min-hitbox-width', document.getElementById('selection-popup').offsetWidth + 'px') // hitbox always at least as wide as popup
         edit.selection.element.classList.add('show')
+        if (edit.selection.enableTransitions) {
+            edit.selection.element.classList.remove('no-transition')
+        } else {
+            edit.selection.element.classList.add('no-transition')
+        }
     } else {
         edit.selection.element.classList.remove('show')
     }
@@ -65,8 +98,7 @@ edit.move.start = function (event) {
     edit.move.mouseStartY = event.clientY
     edit.move.elementStartX = note.elements[app.elementSelected].x
     edit.move.elementStartY = note.elements[app.elementSelected].y
-    document.getElementsByClassName('element')[app.elementSelected].classList.add('no-transition')
-    noteContent.classList.remove('selectable')
+    edit.selection.enableTransitions = false
     body.onmousemove = function () {edit.move.move(window.event)}
     body.onmouseup = function() {edit.move.stop()}
 }
@@ -80,15 +112,14 @@ edit.move.move = function (event) {
     })
 }
 edit.move.stop = function () {
-    document.getElementsByClassName('element')[app.elementSelected].classList.remove('no-transition')
-    noteContent.classList.add('selectable')
+    edit.selection.enableTransitions = true
+    edit.selection.updatePosition(app.elementSelected)
     body.onmousemove = function () {}
     body.onmouseup = function () {}
 }
 
 
 edit.selection.popup.create = function (i) {
-    edit.selection.element = document.getElementById('selection')
     let popupHTML = edit.selection.popup.newSection({type: 'delete', onrun: `note.removeElement(${i})`, icon: 'delete'}, i)
 
     switch (note.elements[i].type) {
@@ -153,15 +184,14 @@ edit.selection.popup.create = function (i) {
                 name: 'scale',
                 min: 0.05,
                 step: 0.05,
-                max: 10,
-                value: note.elements[i].scale,
-                onrun: `note.elements[${i}].scale = parseFloat(this.value)`
+                max: 3,
+                value: note.elements[i].scale ** (1/3),
+                onrun: `note.elements[${i}].scale = parseFloat(this.value) ** 3`
             }, i)
         default:
-            edit.selection.element.innerHTML = ''
             break
     }
-    edit.selection.element.innerHTML = '<div id="selection-popup" class="h hover-list" onmousedown="event.stopPropagation()">' + popupHTML + '</div>'
+    edit.selection.popupElement.innerHTML = popupHTML
 }
 
 

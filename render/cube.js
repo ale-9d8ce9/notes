@@ -1,5 +1,6 @@
 render = {
-    gesture: {}
+    gesture: {waitingForFrame: false, waitingForStop: false},
+    transitions: true
 }
 
 render.all = function () {
@@ -39,9 +40,6 @@ render.delete = function (i) {
             case 'text':
                 document.getElementById('element-data-' + j).setAttribute('onblur', `
                     note.elements[${j}].text = this.innerText;
-                    note.elements[${j}].width = this.clientWidth;
-                    note.elements[${j}].height = this.clientHeight;
-                    render.text(note.elements[${j}], ${j});
                 `) // change text inside note.element on blur
                 document.getElementById('element-data-' + j).setAttribute('oninput', `
                     edit.selection.updatePosition(${j});
@@ -75,9 +73,6 @@ render.text = function (data, i) {
         noteContent.appendChild(render.element)
         render.elementData.setAttribute('onblur', `
             note.elements[${i}].text = this.innerText;
-            note.elements[${i}].width = this.clientWidth;
-            note.elements[${i}].height = this.clientHeight;
-            render.text(note.elements[${i}], ${i});
         `) // change text inside note.element on blur
         render.elementData.setAttribute('oninput', `
             edit.selection.updatePosition(${i});
@@ -92,15 +87,18 @@ render.image = function (data, i) {
     render.element.style.top = data.y + 'px'
     render.element.style.rotate = data.style.rotation + 'deg'
 
-    render.elementData.src = note.files[i].data
-
     render.elementData.style.width = data.width * data.scale + 'px'
     render.elementData.style.height = data.height * data.scale + 'px'
-
+    
+    // If the element does not exist add the new element to the note
     if (!render.alreadyRendered) {
-        // If the element does not exist add the new element to the note
+        render.elementData.src = note.files[i].data
         render.element.appendChild(render.elementData)
         noteContent.appendChild(render.element)
+    }
+    // Remove file data if it does not need to be uploaded to save memory
+    if (!data.toUpload) {
+        note.files[i].data = 'src'
     }
 }
 
@@ -129,6 +127,7 @@ render.container = function (i, elementType) {
 // gesture to move / scale
 render.gesture.wheel = function (event) {
     event.preventDefault()
+    edit.selection.enableTransitions = false
 
     if (event.ctrlKey) {
         let mousex = (event.clientX - noteContent.getBoundingClientRect().left) / note.position.scale
@@ -154,6 +153,7 @@ render.gesture.wheel = function (event) {
 
 render.gesture.moveWithCtrl = function (event) {
     if (event.ctrlKey) {
+        edit.selection.enableTransitions = false
         note.position.x -= (render.gesture.oldMouseX - event.clientX) * settings.gestureSensitivity.moveWithCtrl
         note.position.y -= (render.gesture.oldMouseY - event.clientY) * settings.gestureSensitivity.moveWithCtrl
 
@@ -165,7 +165,17 @@ render.gesture.moveWithCtrl = function (event) {
 
 
 render.gesture.position = function () {
+    // Set transitions back to true after a delay
+    clearTimeout(render.gesture.transitionTimeout)
+    render.gesture.transitionTimeout = setTimeout(() => {
+        edit.selection.enableTransitions = true
+        edit.selection.updatePosition(app.elementSelected)
+    }, 100)
+
+    if (render.gesture.waitingForFrame) return // prevent multiple calls in one frame
+    render.gesture.waitingForFrame = true
     window.requestAnimationFrame(() => {
+        render.gesture.waitingForFrame = false
         noteContent.style.transform = `translate(${note.position.x}px, ${note.position.y}px) scale(${note.position.scale})`
         app.elementSelected != -1 ? edit.selection.updatePosition(app.elementSelected) : undefined
     })
@@ -173,9 +183,10 @@ render.gesture.position = function () {
 
 
 noteWrapper.addEventListener('mousemove', (event) => {render.gesture.moveWithCtrl(event)})
-noteWrapper.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+noteWrapper.addEventListener('wheel', (event) => {render.gesture.wheel(event)}, {passive: false})
 
-render.gesture.selectionElement = document.querySelector('#selection')
-render.gesture.selectionElement.addEventListener('mousemove', (event) => {render.gesture.moveWithCtrl(event)})
-render.gesture.selectionElement.addEventListener('wheel', (event) => {render.gesture.wheel(event)})
+document.querySelector('#selection').addEventListener('mousemove', (event) => {render.gesture.moveWithCtrl(event)})
+document.querySelector('#selection').addEventListener('wheel', (event) => {render.gesture.wheel(event)}, {passive: false})
+document.querySelector('#selection-popup').addEventListener('mousemove', (event) => {render.gesture.moveWithCtrl(event)})
+document.querySelector('#selection-popup').addEventListener('wheel', (event) => {render.gesture.wheel(event)}, {passive: false})
 

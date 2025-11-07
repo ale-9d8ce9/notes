@@ -2,58 +2,24 @@
 
 #selection{
     padding: var(--selection-border-width);
-    position: fixed;
+    position: absolute;
     box-shadow: 0 0 10px #00000080;
     left: 50%;
     top: -0.5rem;
     z-index: 0;
-    transition: 0s;
+    /* transition: var(--transition-edit-selection) var(--transition-curve-bounce); */
+    transition: var(--transition-edit-selection) ease-out;
     opacity: 0;
     border-radius: var(--selection-border-roundness);
     scale: 0;
+    anchor-name: --selection;
+    /* pointer-events: none; */
+    --min-hitbox-width: 2rem;
 }
 
 #selection.show{
     opacity: 1;
     scale: 1;
-}
-#selection-popup{
-    padding: var(--ui-icon-padding);
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    opacity: 0;
-    scale: 0;
-    pointer-events: none;
-    background-color: var(--ui-bg);
-    backdrop-filter: blur(1.2rem);
-    box-shadow: var(--ui-shadow);
-    position: absolute;
-    border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-}
-/* bigger hidden hitbox for selection popup, change padding to increase/decrease */
-#selection-popup::before{
-    content: '';
-    position: absolute;
-    padding: var(--ui-popup-hitbox-size);
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
-#selection:not(:active):hover #selection-popup, #selection-popup:hover, #selection-popup:active, #selection-popup:has(input[type='color']:focus-visible) {
-    opacity: 1;
-    scale: 1;
-    pointer-events: all;
-    translate: -50% -100%;
-    box-shadow: var(--ui-shadow-hover);
-    background-color: var(--ui-bg-hover);
-    top: -1rem;
 }
 
 /* selection border gradient */
@@ -86,6 +52,71 @@
     to { --selection-border-rotation: 360deg; }
 }
 
+
+
+#selection-popup{
+    position-anchor: --selection;
+    anchor-name: --selection-popup;
+    top: anchor(top);
+    left: anchor(center);
+    transition: all var(--transition-duration) var(--transition-curve-bounce), top 0s, left 0s;
+    position: absolute;
+    display: inline-flex;
+    
+    padding: var(--ui-icon-padding);
+    flex-direction: row;
+    align-items: center;
+    border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
+    
+    translate: -50% 0%;
+    opacity: 0;
+    scale: 0;
+    pointer-events: none;
+}
+/* selection popup hitbox */
+#selection::after{
+    content: '';
+    position: absolute;
+    top: .5rem;
+    left: 50%;
+    translate:  -50% -100%;
+    height: calc(var(--selection-border-offset) * 2 + var(--selection-border-width) + 1rem);
+    width: 100%;
+    z-index: -1;
+    transition: inherit;
+    min-width: none;
+}
+#selection:hover::after, #selection:has(~#selection-popup:hover)::after{
+    min-width: var(--min-hitbox-width);
+}
+/* backdrop-filter can only be used one per tree (.popup-section) so applied there (with also bg-clr and shadow) to have 2 blurs */
+#selection-popup::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    transition: all var(--transition-duration) var(--transition-curve-bounce), top 0s, left 0s, right 0s, bottom 0s;
+    z-index: -1;
+
+    backdrop-filter: blur(var(--ui-blur));
+    background-color: var(--ui-bg);
+    box-shadow: var(--ui-shadow);
+    border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
+}
+/* for #selection-popup (hover on selection and on selection popup) */
+#selection:not(:active):hover + #selection-popup, #selection-popup:hover, #selection-popup:active, #selection-popup:has(input[type='color']:focus) {
+    translate: -50% calc(-100% - calc(var(--selection-border-offset) * 2 + var(--selection-border-width)));
+    opacity: 1;
+    scale: 1;
+    pointer-events: all;
+}
+/* for #selection-popup::before (hover only on selection popup) */
+#selection-popup:hover::before, #selection-popup:active::before, #selection-popup:has(input[type='color']:focus-visible)::before {
+    box-shadow: var(--ui-shadow-hover);
+    backdrop-filter: blur(var(--ui-blur-hover));
+    background-color: var(--ui-bg-hover);
+}
+
+
 /* icons only in selection popup */
 .popup-icon {
     position: relative;
@@ -93,7 +124,7 @@
 }
 
 /* selections for sections inside popup icons */
-.popup-icon .popup-section, #selection-popup:has(.popup-icon:focus-within) .popup-icon:not(:focus-within) .popup-section{
+.popup-icon .popup-section {
     display: flex;
     position: absolute;
     top: -1rem;
@@ -102,9 +133,10 @@
     opacity: 0;
     scale: 0;
     background-color: var(--ui-bg);
-    backdrop-filter: blur(var(--ui-blur)); 
+    backdrop-filter: blur(var(--ui-blur));
     box-shadow: var(--ui-shadow);
     pointer-events: none;
+    transition: var(--transition-duration) var(--transition-curve-bounce);
     padding: var(--ui-padding);
     border-radius: calc(var(--ui-elements-roundness) + var(--ui-padding));
 
@@ -120,7 +152,7 @@
         padding: var(--ui-popup-hitbox-size);
     }
 }
-.popup-icon:hover .popup-section, .popup-section:active, #selection-popup:has(.popup-icon:focus-within) .popup-icon:focus-within .popup-section {
+.popup-icon:hover .popup-section, .popup-section:active {
     opacity: 1;
     scale: 1;
     top: -1rem;
@@ -130,6 +162,7 @@
 
 .popup-section:hover, .popup-section:active {
     box-shadow: var(--ui-shadow-hover);
+    backdrop-filter: blur(var(--ui-blur-hover));
     background-color: var(--ui-bg-hover);
 }
 
@@ -143,3 +176,58 @@
 .popup-section input[type="radio"]:checked {
     background-color: var(--clr-desat);
 }
+
+
+/* test styles for selection popup (needs #selection-popup-bg after #selection-popup in html)
+
+
+bigger hitbox for selection popup
+#selection-popup::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    padding: var(--ui-popup-hitbox-size);
+}
+backdrop-filter can only be used one per tree (.popup-section) so applied there (with also bg-clr and shadow) to have 2 blurs
+#selection-popup-bg{
+    position-anchor: --selection-popup;
+    content: '';
+    position: absolute;
+    top: anchor(top);
+    left: anchor(left);
+    translate: -50% -50%;
+    right: anchor(right);
+    bottom: anchor(bottom);
+    transition: all var(--transition-duration) var(--transition-curve-bounce), top 0s, left 0s, right 0s, bottom 0s;
+
+    backdrop-filter: blur(var(--ui-blur));
+    background-color: var(--ui-bg);
+    box-shadow: var(--ui-shadow);
+    border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
+
+    translate: -50% 0%;
+    opacity: 0;
+    scale: 0;
+    pointer-events: none;
+}
+for #selection-popup (hover on selection and on selection popup)
+#selection:not(:active):hover + #selection-popup, #selection-popup:hover, #selection-popup:active, #selection-popup:has(input[type='color']:focus),
+#selection:not(:active):hover ~ #selection-popup-bg, #selection-popup:hover + #selection-popup-bg, #selection-popup:active + #selection-popup-bg, #selection-popup:has(input[type='color']:focus) + #selection-popup-bg {
+    translate: -50% calc(-100% - calc(var(--selection-border-offset) * 2 + var(--selection-border-width)));
+    opacity: 1;
+    scale: 1;
+    pointer-events: all;
+}
+for #selection-popup::before (hover only on selection popup)
+#selection-popup:hover + #selection-popup-bg, #selection-popup:active + #selection-popup-bg, #selection-popup:has(input[type='color']:focus-visible) + #selection-popup-bg {
+    box-shadow: var(--ui-shadow-hover);
+    backdrop-filter: blur(var(--ui-blur-hover));
+    background-color: var(--ui-bg-hover);
+}
+
+ */

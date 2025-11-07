@@ -8,11 +8,13 @@ app = {
         username: '',
         password: ''
     },
-    useEncryption: true,
+    accounts: [],
+    defaultAccount: null,
+    useEncryption: false,
     encryptionKey: null,
     noteId: -1,
     isSaving: false,
-    elementSelected:-1,
+    elementSelected: -1,
     initialWindowInnerWidth: window.innerWidth, // Store the initial window width
 
     fonts: [

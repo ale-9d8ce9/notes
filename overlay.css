@@ -18,13 +18,16 @@
     opacity: 0;
     display: none;
     position: absolute;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     background-color: var(--overlay-bg);
     padding: var(--overlay-padding);
     border-radius: var(--overlay-roundness);
     border: var(--ui-elements-border-width) solid var(--clr-desat);
     backdrop-filter: blur(var(--overlay-blur));
+    max-height: 80vh;
+    max-width: 80vw;
 }
 .overlay[show]{
     opacity: 1;
@@ -38,9 +41,10 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--clr-text);
-    box-shadow: 0 -5rem 0 5rem var(--overlay-title-bg);
+    box-shadow: 0 -10rem 0 10rem var(--overlay-title-bg);
     background-color: var(--overlay-title-bg);
     padding-bottom: calc(var(--overlay-padding-elements) / 2);
+    position: sticky;
 }
 
 

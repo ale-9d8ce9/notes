@@ -21,13 +21,16 @@
     <div id="note-wrapper">
         <div id="note-content"></div>
     </div>
-    <div id="selection"></div>
+    <div id="selection">
+    </div>
+    <div id="selection-popup" class="h hover-list" onmousedown="event.stopPropagation()"></div>
 
     <div id="sidebar">
         <input type="text" id="note-title" placeholder="Note Title" oninput="note.name = this.value.trim(); document.title = app.titleName + ' - ' + note.name">
         <div id="tools" class="hover-list v">
             <img src="icons/add-text.svg" id="add-text" class="icon">
             <img src="icons/add-image.svg" id="add-image" class="icon">
+            <img src="icons/add-audio.svg" id="add-audio" class="icon">
         </div>
         <div id="statusbar" class="hover-list h">
             <img src="icons/logout.svg" id="close-note" class="icon">
@@ -40,35 +43,24 @@
     <div id="overlay">
         <div id="overlay-content">
 
-            <div class="overlay" id="setup">
-                <div class="overlay-title">Setup</div>
-                <input type="text" id="setup-url" placeholder="backend URL" onchange="app.backend = this.value.trim()">
-                <input type="checkbox" onchange="app.useEncryption = this.checked" checked id="setup-encryption"><label for="setup-encryption">Use Encryption</label>
-                <input type="text" id="setup-key" placeholder="key (comma separated numbers)" oninput="secure.importKey(this.value.trim().split(',')).then(k => {app.encryptionKey = k})">
+            <div class="overlay" id="add-account" style="width: 20rem;">
+                <div class="overlay-title">Add account</div>
+                <input type="text" placeholder="backend URL" id="add-account-backend">
+                <input type="checkbox" id="add-account-useEncryption" onchange="document.getElementById('add-account-encryptionKey').style.display = this.checked ? 'initial' : 'none'">
+                <input type="text" placeholder="encryption key (comma separated numbers)" id="add-account-encryptionKey">
+                <input type="text" placeholder="username" id="add-account-username">
+                <input type="password" placeholder="password" id="add-account-password">
                 <div class="opposite">
-                    <div></div>
-                    <button id="ping-button" onclick="pingServer(function () {localStorage.setItem('backend', app.backend);openOverlay('login')})">Connect</button>
+                    <button class="secondary" id="add-account-register">register</button>
+                    <button id="add-account-login">login</button>
                 </div>
+                <div class="overlay-x" onclick="openOverlay('accounts')"></div>
             </div>
 
-            <div class="overlay" id="login">
-                <div class="overlay-title">Log In</div>
-                <input type="text" id="login-username" placeholder="Username">
-                <input type="password" id="login-password" placeholder="Password">
-                <div class="opposite">
-                    <button id="register-link" onclick="openOverlay('register')" class="secondary">Register</button>
-                    <button id="login-button">Log In</button>
-                </div>
-                <div class="overlay-x" onclick="openOverlay('setup')"></div>
-            </div>
-
-            <div class="overlay" id="register">
-                <div class="overlay-title">Register</div>
-                <input type="text" id="register-username" placeholder="Username">
-                <input type="password" id="register-password" placeholder="Password">
-                <div class="opposite">
-                    <button id="login-link" onclick="openOverlay('login')" class="secondary">Log In</button>
-                    <button id="register-button">Register</button>
+            <div class="overlay" id="accounts">
+                <div class="overlay-title">Accounts</div>
+                <div class="table-container">
+                    <table id="accounts-list"></table>
                 </div>
             </div>
 
@@ -78,7 +70,7 @@
                     <table id="notes-list"></table>
                 </div>
                 <button id="create-note" onclick="createNewNote('new note')">Create New Note</button>
-                <div class="overlay-x" onclick="openOverlay('login')"></div>
+                <div class="overlay-x" onclick="openOverlay('accounts')"></div>
             </div>
 
             <div class="overlay" id="settings">
@@ -94,6 +86,13 @@
                 </div>
                 <div class="overlay-x"></div>
             </div>
+
+            <div class="overlay" id="add-audio">
+                <div class="overlay-title">Add Audio</div>
+                <span>nothing yet</span>
+                <div class="overlay-x"></div>
+            </div>
+
         </div>
     </div>
     <script src="scripts.js"></script>

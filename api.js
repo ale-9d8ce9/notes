@@ -24,37 +24,74 @@ async function apiRequest(request) {
         document.querySelector('body').setAttribute('loading', 'false')
         return JSON.parse(response)
     } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error contacting server:', error)
+        alert('Error contacting server: ' + error.message)
         document.querySelector('body').setAttribute('loading', 'false')
         return null
     }
 }
 
-document.getElementById('register-button').onclick = async function () {
-    if ((message = await apiRequest({
-        action: 'addUser',
-        username: document.getElementById('register-username').value.trim(),
-        password: document.getElementById('register-password').value.trim()
-    })).result === 'success') {
+document.getElementById('add-account-register').onclick = async function () {
+    if (await addAccount(true)) {
         alert('User added successfully, logging in...')
-        document.getElementById('register-username').value = ''
-        document.getElementById('register-password').value = ''
-        getListNotes(message.message.username, message.message.password)
-    } else {
-        alert('Error adding user: ' + message.message)
+        getListNotes(app.user.username, app.user.password)
     }
 }
 
-document.getElementById('login-button').onclick = async function () {
-    let username = document.getElementById('login-username').value.trim()
-    let password = document.getElementById('login-password').value.trim()
-    if (username === '' || password === '') {
-        alert('Username and password cannot be empty')
-        return
+document.getElementById('add-account-login').onclick = async function () {
+    if (await addAccount(false)) {
+        getListNotes(app.user.username, app.user.password)
     }
-    // get list of notes
-    if (!await getListNotes(username, password)) {
-        openOverlay('login')
+}
+
+async function addAccount(register) {
+    app.backend = document.getElementById('add-account-backend').value.trim()
+    app.useEncryption = document.getElementById('add-account-useEncryption').checked
+    if (app.useEncryption) {
+        app.encryptionKey = document.getElementById('add-account-encryptionKey').value.trim()
+    }
+    // check server connection
+    let response = await pingServer()
+    if (!response) {
+        return false
+    }
+    function saveAccount() { // save to localstorage
+        app.accounts.push({
+            backend: app.backend,
+            username: app.user.username,
+            password: app.user.password,
+            useEncryption: app.useEncryption,
+            encryptionKey: app.useEncryption ? app.encryptionKey : null
+        })
+        localStorage.setItem('accounts', JSON.stringify(app.accounts))
+        updateAccountsList()
+    }
+
+    if (register) { // add user
+        response = await apiRequest({
+            action: 'addUser',
+            username: app.user.username = document.getElementById('add-account-username').value.trim(),
+            password: app.user.password = document.getElementById('add-account-password').value.trim()
+        })
+        if (response.result == 'success') {
+            saveAccount()
+            getListNotes(app.user.username, app.user.password)
+            return true
+        } else {
+            return false
+        }
+
+    } else { // login
+        response = await getListNotes(
+            document.getElementById('add-account-username').value.trim(),
+            document.getElementById('add-account-password').value.trim()
+        )
+        if (response === true) {
+            saveAccount()
+            return true
+        } else {
+            return false
+        }
     }
 }
 
@@ -81,7 +118,6 @@ document.getElementById('save-note').onclick = function () {
 
 
 async function getListNotes(username, password) {
-    openOverlay('listNotes')
     notes = await apiRequest({
         action: 'getListNotes',
         username: username,
@@ -92,9 +128,7 @@ async function getListNotes(username, password) {
     if (notes.result == 'success') {
         // save login data
         app.user.username = username
-        localStorage.setItem('username', username)
         app.user.password = password
-        localStorage.setItem('password', password)
         // parse notes
         notes = notes.message
         document.getElementById('notes-list').innerHTML = `
@@ -115,16 +149,17 @@ async function getListNotes(username, password) {
 
             document.getElementById('notes-list').innerHTML += `
                 <tr class="listNoteElement" onclick="getFullNote(${i})">
-                <td class="noteTitle">${j.name}</td>
-                <td class="noteActions">
-                    <button class="noteActionButton" onclick="deleteNote(${i}); event.stopPropagation();"><img src="icons/delete.svg"></button>
-                </td>
-                <td class="dateCell">${j.dateModified}</td>
-                <td class="dateCell">${j.dateCreated}</td>
+                    <td class="noteTitle">${j.name}</td>
+                    <td class="noteActions">
+                        <button class="noteActionButton" onclick="deleteNote(${i}); event.stopPropagation();"><img src="icons/delete.svg"></button>
+                    </td>
+                    <td class="dateCell">${j.dateModified}</td>
+                    <td class="dateCell">${j.dateCreated}</td>
                 </tr>
             `
         }
         app.noteId = notes.length
+        openOverlay('listNotes')
         return true
     } else {
         // show error
@@ -184,7 +219,6 @@ async function addNote() {
         note = null
         document.querySelector('body').setAttribute('in-overlay', 'true')
         getListNotes(app.user.username, app.user.password)
-
         return false
     }
 }
@@ -224,6 +258,9 @@ async function saveNote(noteId) {
                     if (noteToUpload.elements[i].toUpload == false){
                         // if file is not updated remove its data from upload
                         delete noteToUpload.files[i].data
+                    } else if (note.elements[i].toUpload == true) {
+                        // if uploading mark as uploading
+                        note.elements[i].toUpload = 'uploading'
                     }
                 }
             }
@@ -244,6 +281,11 @@ async function saveNote(noteId) {
                 return false
             }
             app.isSaving = false
+            // after saving remove toUpload tag from all files
+            for (let i = 0; i < note.files.length; i++) {
+                note.elements[i].toUpload == 'uploading' ? note.elements[i].toUpload = false : undefined
+            }
+            note.filesToDelete = []
 
         } catch (error) {
             console.error('Error saving note:', error)
@@ -252,11 +294,6 @@ async function saveNote(noteId) {
             alert('Error saving note: ' + error.message)
             return false
         }
-        // after saving remove toUpload tag from all files
-        for (let i = 0; i < note.files.length; i++) {
-            note.elements[i].toUpload = false
-        }
-        note.filesToDelete = []
     } else {
         console.log('Note is not editable or is being saved')
     }
@@ -275,28 +312,17 @@ function updateSaveIcon() {
 }
 
 
-function decrypt(data) {
-    return atob(data)
-}
 
-function encrypt(data) {
-    return btoa(data)
-}
-
-async function pingServer(callback, errorCallback) {
+async function pingServer() {
     const response = await apiRequest({
         action: 'ping'
     })
     if (response && response.result === 'success') {
         console.log('Server is reachable')
-        localStorage.setItem('useEncryption', app.useEncryption)
-        localStorage.setItem('encryptionKey', app.encryptionKey != null ? await secure.exportKey(app.encryptionKey) : '')
-        if (callback) callback()
         return true
     } else {
         console.error('Server is not reachable:', response ? response.message : 'No response')
         alert('Server is not reachable. Error: ' + (response ? response.message : 'No response'))
-        if (errorCallback) errorCallback()
         return false
     }
 }

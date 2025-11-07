@@ -8,6 +8,8 @@
     overflow: hidden;
     background-color: var(--note-bg);
 
+    contain: content;
+
     /* edge fade effect */
     &::after{
         content: '';
@@ -44,11 +46,6 @@
     * {
         transition: 0s;
     }
-
-    /* &.selected{
-        outline: .5rem dotted var(--clr);
-        outline-offset: .2rem;
-    } */
 }
 
 .element img{

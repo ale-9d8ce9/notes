@@ -6,43 +6,39 @@ convert = {}
 
 async function start() {
     if (window.location.search.includes('embed=macos')) {
-        document.getElementById('fullscreen-button').style.display = 'none'
-        document.getElementById('note-title').style.opacity = 0
-        document.getElementById('note-title').style.pointerEvents = 'none'
-        document.getElementById('note-title').style.scale = 0
+        document.getElementById('sidebar').style.opacity = 0
+        document.getElementById('sidebar').style.pointerEvents = 'none'
+        document.getElementById('sidebar').style.scale = 0
     }
     settings.start()
-    openOverlay('setup')
-    document.getElementById('setup-url').value = localStorage.getItem('backend') || ''
-    document.getElementById('setup-key').value = localStorage.getItem('encryptionKey') || ''
-    app.useEncryption = localStorage.getItem('useEncryption') === 'true'
-    document.getElementById('setup-encryption').checked = app.useEncryption
-    document.getElementById('login-username').value = localStorage.getItem('username') || ''
-    document.getElementById('login-password').value = localStorage.getItem('password') || ''
+    // load accounts
+    app.accounts = JSON.parse(localStorage.getItem('accounts')) || []
+    app.defaultAccount = parseInt(localStorage.getItem('defaultAccount')) || null
+    updateAccountsList()
+    app.defaultAccount != null ? loadAccount(app.defaultAccount) : openOverlay('accounts')
+
     // import encryption key (if exists)
-    try {
-        app.encryptionKey = document.getElementById('setup-key').value.trim().split(',')
+    if (app.useEncryption && app.encryptionKey != null) {
         if (app.encryptionKey.length != 32) {
             app.encryptionKey = null
             app.useEncryption = false
             console.error('Error importing encryption key')
         } else {
-            app.encryptionKey = await secure.importKey(app.encryptionKey)
-            console.log('Encryption key imported successfully')
+            try {
+                app.encryptionKey = await secure.importKey(app.encryptionKey)
+                console.log('Encryption key imported successfully')
+            } catch (e) {
+                console.error('Error importing encryption key:', e)
+                alert('Error importing encryption key:', e)
+                app.encryptionKey = null
+                app.useEncryption = false
+            }
         }
-    } catch (e) {
-        console.error('Error importing encryption key:', e)
-        localStorage.removeItem('setup-key')
-        app.encryptionKey = null
-        if (app.useEncryption) return
     }
     // check backend
-    if (app.backend = localStorage.getItem('backend')) {
+    if (app.backend) {
         if (await pingServer()) {
             // if backend respond try log in
-            app.user.username = localStorage.getItem('username') || ''
-            app.user.username = localStorage.getItem('username') || ''
-            app.user.password = localStorage.getItem('password') || ''
             if (app.user.username != '' && app.user.password != '') {
                 if (await getListNotes(app.user.username, app.user.password) == false) {
                     // if login fails
@@ -55,6 +51,34 @@ async function start() {
     }
 }
 
+
+function loadAccount(i) {
+    if (i < app.accounts.length) {
+        app.backend = app.accounts[i].backend
+        app.user.username = app.accounts[i].username
+        app.user.password = app.accounts[i].password
+        app.useEncryption = app.accounts[i].useEncryption
+        app.encryptionKey = app.accounts[i].encryptionKey
+        getListNotes(app.user.username, app.user.password)
+    }
+}
+
+function updateAccountsList() {
+    document.getElementById('accounts-list').innerHTML=`
+        <tr class="listNoteElement" onclick="openOverlay('add-account')">
+            <td class="noteTitle"><span><img src="icons/add.svg">add account</span></td>
+        </tr>
+    `
+    for (let i = 0; i < app.accounts.length; i++) {
+        let j = app.accounts[i]
+        document.getElementById('accounts-list').innerHTML+=`
+            <tr class="listNoteElement" onclick="loadAccount(${i})">
+                <td class="noteTitle">${j.username}</td>
+                <td class="dateCell"><img src="icons/${app.defaultAccount == i ? 'fill-star' : 'star'}.svg"></td>
+            </tr>
+        `
+    }
+}
 
 function createNewNote(name) {
     note = new newNote({name: name, isNew: true})
