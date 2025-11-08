@@ -73,25 +73,53 @@
                 <div class="overlay-x" onclick="openOverlay('accounts')"></div>
             </div>
 
-            <div class="overlay" id="settings">
-                <div class="overlay-title">Settings</div>
-                <div class="settings-item">
-                    <input type="range" min="1" max="3.5" step="0.5" id="settings-moveWithCtrl" class="settings-slider">
-                    <input type="range" min="1" max="3.5" step="0.5" id="settings-moveWithFinger" class="settings-slider">
-                    <input type="range" min="0.005" max="0.025" step="0.002" id="settings-zoom" class="settings-slider">
-                </div>
-                <div class="settings-item">
-                    <input type="color" id="settings-clr" class="settings-color">
-                    <input type="color" id="settings-clr-secondary" class="settings-color">
+            <div class="overlay" id="add-audio">
+                <div class="overlay-title">Add Audio</div>
+                <div>mouse in bubble to record <br> mouse out to stop</div>
+                <div id="audio-bubble">bubble</div>
+                <div class="opposite">
+                    <button onclick="openOverlay()">cancel</button>
+                    <button onclick="audio.startRecording()">start</button>
+                    <button onclick="audio.stopRecording()">stop</button>
                 </div>
                 <div class="overlay-x"></div>
             </div>
 
-            <div class="overlay" id="add-audio">
-                <div class="overlay-title">Add Audio</div>
-                <span>nothing yet</span>
+            <div class="overlay" id="settings">
+                <div class="overlay-title">Settings</div>
+                <div class="settings-item-group">
+                    <div class="settings-item">
+                        <label for="settings-moveWithCtrl">Move with Ctrl:</label>
+                        <input type="range" min="1" max="3.5" step="0.5" id="settings-moveWithCtrl" class="settings-slider">
+                    </div>
+                    <div class="settings-item">
+                        <label for="settings-moveWithFinger">Move with Finger:</label>
+                        <input type="range" min="1" max="3.5" step="0.5" id="settings-moveWithFinger" class="settings-slider">
+                    </div>
+                    <div class="settings-item">
+                        <label for="settings-zoom">Zoom:</label>
+                        <input type="range" min="0.005" max="0.025" step="0.002" id="settings-zoom" class="settings-slider">
+                    </div>
+                </div>    
+                <div class="settings-item-group">
+                    <div class="settings-item">
+                        <label for="settings-clr">Primary Color:</label>
+                        <input type="color" id="settings-clr" class="settings-color">
+                    </div>
+                    <div class="settings-item">
+                        <label for="settings-clr-secondary">Secondary Color:</label>
+                        <input type="color" id="settings-clr-secondary" class="settings-color">
+                    </div>
+                </div>    
+                <div class="settings-item-group">
+                    <div class="settings-item">
+                        <label for="betterBgAudio">Better Background Audio when recording:</label>
+                        <input type="checkbox" id="betterBgAudio" onchange="settings.audioConstraints.default = this.checked ? settings.audioConstraints.betterBgAudio : settings.audioConstraints.normal">
+                    </div>
+
+                </div>    
                 <div class="overlay-x"></div>
-            </div>
+            </div>    
 
         </div>
     </div>
@@ -99,6 +127,7 @@
     <script src="data.js"></script>
     <script src="edit.js"></script>
     <script src="settings.js"></script>
+    <script src="audio.js"></script>
     <script src="api.js"></script>
     <script src="render/cube.js"></script>
     <script src="app.js"></script>

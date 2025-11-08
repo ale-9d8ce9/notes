@@ -11,6 +11,7 @@ async function start() {
         document.getElementById('sidebar').style.scale = 0
     }
     settings.start()
+    audio.start()
     // load accounts
     app.accounts = JSON.parse(localStorage.getItem('accounts')) || []
     app.defaultAccount = parseInt(localStorage.getItem('defaultAccount')) || null

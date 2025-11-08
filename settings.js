@@ -5,6 +5,18 @@ settings = {
         moveWithCtrl: 1,
         zoom: 0.01,
         moveWithFinger: 2
+    },
+    audioConstraints: {
+        betterBgAudio: {
+            audio: {
+                echoCancellation: false,
+                noiseSuppression: false,
+                sampleRate: 44100
+            },
+        },
+        normal: {
+            audio: true
+        },
     }
 }
 
@@ -33,5 +45,7 @@ settings.start = function () {
     document.getElementById("settings-clr-secondary").onchange = function () {
         document.documentElement.style.setProperty('--clr-secondary', this.value)
     }
+
+    settings.audioConstraints.default = settings.audioConstraints.betterBgAudio
 }
     

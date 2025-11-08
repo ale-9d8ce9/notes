@@ -20,6 +20,13 @@ render.single = function (data, i) {
             case 'image':
                 render.image(data, i)
                 break
+            case 'audio':
+                render.audio(data, i)
+                break
+            default:
+                console.error('Unknown element ' + i + ' type: ' + data.type)
+                alert('Unknown element ' + i + ' type: ' + data.type)
+                break
         }
     } else {
         // If the element is deleted, remove it from the DOM
@@ -99,6 +106,26 @@ render.image = function (data, i) {
     // Remove file data if it does not need to be uploaded to save memory
     if (!data.toUpload) {
         note.files[i].data = 'src'
+    }
+}
+
+render.audio = function (data, i) {
+    data = convert.toPx(data)
+    render.container(i, 'audio')
+    // Set the element data and values
+    render.element.style.left = data.x + 'px'
+    render.element.style.top = data.y + 'px'
+    
+    // If the element does not exist add the new element to the note
+    if (!render.alreadyRendered) {
+        render.elementData.src = note.files[i].data
+        render.elementData.controls = true
+        render.element.appendChild(render.elementData)
+        noteContent.appendChild(render.element)
+    }
+    // Remove file data if it does not need to be uploaded to save memory
+    if (!data.toUpload) {
+        //note.files[i].data = 'src'
     }
 }
 

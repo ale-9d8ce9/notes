@@ -47,6 +47,13 @@ class newNote {
                     this.files.push(file)
                     render.image(element, this.elements.length - 1)
                     break
+                case 'audio':
+                    element = new newElement.audio(size)
+                    file = new newFile(data)
+                    this.elements.push(element)
+                    this.files.push(file)
+                    render.audio(element, this.elements.length - 1)
+                    break
                 default:
                     throw new Error('Unknown type')
             }
@@ -136,6 +143,19 @@ newElement = {
                 background: '#ffffff00',
                 rotation: 0
             }
+        }
+    },
+    audio : class {
+        constructor(size) {
+            this.type = 'audio'
+            this.name = 'audio_' + Date.now()
+            
+            this.x = size.x
+            this.y = size.y
+
+            this.toUpload = true
+
+            this.color = '#4a4a4aff'
         }
     }
 }

@@ -63,6 +63,18 @@ edit.add.image = function (base64String) {
     }
 }
 
+edit.add.audio = function (base64String) {
+    // get center position
+    let x = window.innerWidth / 2
+    let y = window.innerHeight / 2
+    let position = convert.toPoints(getMousePosition({clientX: x, clientY: y}))
+
+    note.addElement('audio', base64String, {
+        x: position.x,
+        y: position.y
+    })
+}
+
 
 edit.select = function (i) {
     if (i != -1) {
