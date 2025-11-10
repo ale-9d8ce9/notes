@@ -53,8 +53,8 @@
                 <input type="text" placeholder="username" id="add-account-username">
                 <input type="password" placeholder="password" id="add-account-password">
                 <div class="opposite">
-                    <button class="secondary" id="add-account-register">create account</button>
-                    <button id="add-account-login">login</button>
+                    <button id="add-account-register">create account</button>
+                    <button id="add-account-login" class="primary">login</button>
                 </div>
                 <div class="overlay-x" onclick="openOverlay('accounts')"></div>
             </div>
@@ -67,8 +67,8 @@
                 <input type="text" placeholder="username" id="edit-account-username">
                 <input type="password" placeholder="password" id="edit-account-password">
                 <div class="opposite">
-                    <button class="secondary" id="edit-account-remove">remove</button>
-                    <button id="edit-account-save">save</button>
+                    <button id="edit-account-remove">remove</button>
+                    <button id="edit-account-save" class="primary">save</button>
                 </div>
                 <div class="overlay-x" onclick="openOverlay('accounts')"></div>
             </div>
@@ -78,9 +78,7 @@
                 <div class="table-container">
                     <table id="accounts-list"></table>
                 </div>
-                <button id="add-account-button">
-                    Add Account
-                </button>
+                <button id="add-account-button">Add Account</button>
             </div>
 
             <div class="overlay" id="listNotes">
@@ -98,8 +96,8 @@
                 <div id="audio-bubble">bubble</div>
                 <div class="opposite">
                     <button onclick="openOverlay()">cancel</button>
-                    <button onclick="audio.startRecording()">start</button>
-                    <button onclick="audio.stopRecording()">stop</button>
+                    <button class="primary" onclick="audio.startRecording()">start</button>
+                    <button class="primary" onclick="audio.stopRecording()">stop</button>
                 </div>
                 <div class="overlay-x"></div>
             </div>
@@ -122,20 +120,23 @@
                 </div>    
                 <div class="settings-item-group">
                     <div class="settings-item">
-                        <label for="settings-clr">Primary Color:</label>
+                        <label for="settings-clr-accent">Accent Color:</label>
+                        <input type="color" id="settings-clr-accent" class="settings-color">
+                    </div>
+                    <div class="settings-item">
+                        <label for="settings-clr">Theme Color:</label>
                         <input type="color" id="settings-clr" class="settings-color">
                     </div>
                     <div class="settings-item">
-                        <label for="settings-clr-secondary">Secondary Color:</label>
-                        <input type="color" id="settings-clr-secondary" class="settings-color">
+                        <label for="balls-notebg">Balls in note bg:</label>
+                        <input type="checkbox" id="settings-balls-notebg" onchange="settings.ballsNotebg = this.checked; document.getElementById('note-wrapper').setAttribute('balls', this.checked)">
                     </div>
-                </div>    
+                </div>
                 <div class="settings-item-group">
                     <div class="settings-item">
                         <label for="betterBgAudio">Better Background Audio when recording:</label>
-                        <input type="checkbox" id="betterBgAudio" onchange="settings.audioConstraints.default = this.checked ? settings.audioConstraints.betterBgAudio : settings.audioConstraints.normal">
+                        <input type="checkbox" id="settings-betterBgAudio" onchange="settings.audioConstraints.default = this.checked ? settings.audioConstraints.betterBgAudio : settings.audioConstraints.normal">
                     </div>
-
                 </div>    
                 <div class="overlay-x"></div>
             </div>    

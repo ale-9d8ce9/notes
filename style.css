@@ -1,13 +1,12 @@
 :root {
-    --note-bg: oklch(0% 0 0);
-    --page-bg: var(--note-bg);
+    --page-bg: oklch(0% 0 0);
+    --note-bg: var(--page-bg);
 
-    --clr: oklch(57.372% 0.16224 264.518);
-    --clr-desat: oklch(from var(--clr) l 0.10 h / 0.3);
+    --clr-accent: #35bdb1;
+    --clr-accent-desat: oklch(from var(--clr-accent) calc(l * 1.2) calc(c * 0.9) h / 0.3);
 
-    --clr-secondary: oklch(73.204% 0.0693 250.834);
-    --clr-secondary-desat: oklch(from var(--clr-secondary) calc(l + 10%) 0.10 h / 0.3);
-    --clr-secondary-desat: oklch(from var(--clr-secondary) calc(l + 10) 0.10 h / 0.3);
+    --clr: #6183ed;
+    --clr-desat: oklch(from var(--clr) calc(l * 1.2) calc(c * 0.9) h / 0.3);
 
     --clr-bg: oklch(from var(--clr) 0.25 0.02 h / 0.6);
 
@@ -18,7 +17,7 @@
     --overlay-padding: 1rem;
     --overlay-roundness: 1.5rem;
     --overlay-padding-elements: 1rem;
-    --overlay-title-bg: oklch(from var(--clr-secondary) l c h / 0.51);
+    --overlay-title-bg: oklch(from var(--clr-accent) l c h / 0.51);
     --overlay-blur: 1rem;
 
     --ui-blur: .2rem;
@@ -69,7 +68,7 @@
     --transition-duration-button: 0.1s;
     --transition-edit-selection: 0.15s;
 
-    --transition-curve-bounce: cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    --transition-curve-bounce: ease;
 }
 
 
@@ -145,7 +144,6 @@ body[loading="true"]{
 #wallpaper{
     position: fixed;
     inset: 0;
-    opacity: 0;
     pointer-events: none;
     /* in case of no wallpaper use the old one */
     background: radial-gradient(circle at 0% 0%, #023437, transparent), radial-gradient(circle at 50% 50%, #360751, transparent), radial-gradient(circle at 100% 100%, #262500, transparent), radial-gradient(circle at 0% 100%, #400, transparent), radial-gradient(circle at 100% 0%, #045301, transparent);
@@ -187,7 +185,7 @@ body[loading="true"]{
         left: anchor(left);
         right: anchor(right);
         bottom: anchor(bottom);
-        background: var(--clr-secondary-desat);
+        background: var(--clr-accent-desat);
         border-radius: var(--ui-icon-roundness-small);
         pointer-events: none;
         transition: var(--transition-duration-fast);
@@ -250,11 +248,11 @@ body[loading="true"]{
     white-space: nowrap;
 
     &:hover {
-        border-color: var(--clr);
-        background-color: var(--clr-secondary-desat);
+        border-color: var(--clr-accent);
+        background-color: var(--clr-accent-desat);
 
         & + * {
-            border-color: var(--clr);
+            border-color: var(--clr-accent);
         }
     }
 }
