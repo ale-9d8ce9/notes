@@ -1,5 +1,6 @@
 
 async function apiRequest(request) {
+    console.log('API Request:', request)
     app.encryptionKey == '' ? app.encryptionKey = null : undefined
     try {
         let url = app.backend + '?action=' + request.action
@@ -32,16 +33,11 @@ async function apiRequest(request) {
 }
 
 document.getElementById('add-account-register').onclick = async function () {
-    if (await addAccount(true)) {
-        alert('User added successfully, logging in...')
-        getListNotes(app.user.username, app.user.password)
-    }
+    addAccount(true)
 }
 
 document.getElementById('add-account-login').onclick = async function () {
-    if (await addAccount(false)) {
-        getListNotes(app.user.username, app.user.password)
-    }
+    addAccount(false)
 }
 
 async function addAccount(register) {
@@ -64,7 +60,7 @@ async function addAccount(register) {
             encryptionKey: app.useEncryption ? app.encryptionKey : null
         })
         localStorage.setItem('accounts', JSON.stringify(app.accounts))
-        updateAccountsList()
+        accounts.updateList()
     }
 
     if (register) { // add user

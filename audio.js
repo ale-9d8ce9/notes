@@ -1,7 +1,7 @@
 audio = {available: false, chunks: []}
 
 audio.start = function () {
-    if (navigator.audioSession.type) {
+    if (navigator.audioSession && navigator.audioSession.type) {
         navigator.audioSession.type = 'play-and-record'
     }
     audio.bubbleElement = document.getElementById('audio-bubble')

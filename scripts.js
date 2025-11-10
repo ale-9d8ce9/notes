@@ -15,8 +15,8 @@ async function start() {
     // load accounts
     app.accounts = JSON.parse(localStorage.getItem('accounts')) || []
     app.defaultAccount = parseInt(localStorage.getItem('defaultAccount')) || null
-    updateAccountsList()
-    app.defaultAccount != null ? loadAccount(app.defaultAccount) : openOverlay('accounts')
+    accounts.updateList()
+    app.defaultAccount != null ? accounts.load(app.defaultAccount) : openOverlay('accounts')
 
     // import encryption key (if exists)
     if (app.useEncryption && app.encryptionKey != null) {
@@ -36,50 +36,9 @@ async function start() {
             }
         }
     }
-    // check backend
-    if (app.backend) {
-        if (await pingServer()) {
-            // if backend respond try log in
-            if (app.user.username != '' && app.user.password != '') {
-                if (await getListNotes(app.user.username, app.user.password) == false) {
-                    // if login fails
-                    openOverlay('login')
-                }
-            } else {
-                openOverlay('login')
-            }
-        }
-    }
 }
 
 
-function loadAccount(i) {
-    if (i < app.accounts.length) {
-        app.backend = app.accounts[i].backend
-        app.user.username = app.accounts[i].username
-        app.user.password = app.accounts[i].password
-        app.useEncryption = app.accounts[i].useEncryption
-        app.encryptionKey = app.accounts[i].encryptionKey
-        getListNotes(app.user.username, app.user.password)
-    }
-}
-
-function updateAccountsList() {
-    document.getElementById('accounts-list').innerHTML=`
-        <tr class="listNoteElement" onclick="openOverlay('add-account')">
-            <td class="noteTitle"><span><img src="icons/add.svg">add account</span></td>
-        </tr>
-    `
-    for (let i = 0; i < app.accounts.length; i++) {
-        let j = app.accounts[i]
-        document.getElementById('accounts-list').innerHTML+=`
-            <tr class="listNoteElement" onclick="loadAccount(${i})">
-                <td class="noteTitle">${j.username}</td>
-                <td class="dateCell"><img src="icons/${app.defaultAccount == i ? 'fill-star' : 'star'}.svg"></td>
-            </tr>
-        `
-    }
-}
 
 function createNewNote(name) {
     note = new newNote({name: name, isNew: true})

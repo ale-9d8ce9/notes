@@ -9,7 +9,7 @@
     --clr-secondary-desat: oklch(from var(--clr-secondary) calc(l + 10%) 0.10 h / 0.3);
     --clr-secondary-desat: oklch(from var(--clr-secondary) calc(l + 10) 0.10 h / 0.3);
 
-    --clr-bg: oklch(0.27 0.02 150.4 / 0.5);
+    --clr-bg: oklch(from var(--clr) 0.25 0.02 h / 0.6);
 
     --clr-text: oklch(100% 0.00011 271.152);
     --clr-text-alt: oklch(0% 0 0);

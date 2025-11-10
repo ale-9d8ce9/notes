@@ -35,7 +35,9 @@
         <div id="statusbar" class="hover-list h">
             <img src="icons/logout.svg" id="close-note" class="icon">
             <img src="icons/save.svg" id="save-note" class="icon">
-            <img src="icons/fullscreen.svg" id="fullscreen-button" class="icon" onclick="document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()">
+            <img src="icons/fullscreen.svg" id="fullscreen-button" class="icon" onclick="
+                document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()"
+            >
             <img src="icons/settings.svg" onclick="openOverlay('settings')" class="icon">
         </div>
     </div>
@@ -51,8 +53,22 @@
                 <input type="text" placeholder="username" id="add-account-username">
                 <input type="password" placeholder="password" id="add-account-password">
                 <div class="opposite">
-                    <button class="secondary" id="add-account-register">register</button>
+                    <button class="secondary" id="add-account-register">create account</button>
                     <button id="add-account-login">login</button>
+                </div>
+                <div class="overlay-x" onclick="openOverlay('accounts')"></div>
+            </div>
+
+            <div class="overlay" id="edit-account" style="width: 20rem;">
+                <div class="overlay-title">Edit account</div>
+                <input type="text" placeholder="backend URL" id="edit-account-backend">
+                <input type="checkbox" id="edit-account-useEncryption" onchange="document.getElementById('edit-account-encryptionKey').style.display = this.checked ? 'initial' : 'none'">
+                <input type="text" placeholder="encryption key (comma separated numbers)" id="edit-account-encryptionKey">
+                <input type="text" placeholder="username" id="edit-account-username">
+                <input type="password" placeholder="password" id="edit-account-password">
+                <div class="opposite">
+                    <button class="secondary" id="edit-account-remove">remove</button>
+                    <button id="edit-account-save">save</button>
                 </div>
                 <div class="overlay-x" onclick="openOverlay('accounts')"></div>
             </div>
@@ -62,6 +78,9 @@
                 <div class="table-container">
                     <table id="accounts-list"></table>
                 </div>
+                <button id="add-account-button">
+                    Add Account
+                </button>
             </div>
 
             <div class="overlay" id="listNotes">
@@ -124,6 +143,7 @@
         </div>
     </div>
     <script src="scripts.js"></script>
+    <script src="accounts.js"></script>
     <script src="data.js"></script>
     <script src="edit.js"></script>
     <script src="settings.js"></script>
