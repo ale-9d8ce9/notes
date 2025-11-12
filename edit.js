@@ -2,7 +2,10 @@ edit = {
     vars:{},
     move:{},
     add:{},
-    selection:{popup:{}, enableTransitions: true}
+    selection:{popup:{}, enableTransitions: true},
+    mode: {
+        current: 'edit',
+    }
 }
 edit.selection.element = document.getElementById('selection')
 edit.selection.popupElement = document.getElementById('selection-popup')
@@ -34,8 +37,16 @@ document.getElementById('add-audio').onclick = function () {
 }
 
 
+// double click empty space to add text
+noteWrapper.addEventListener('dblclick', function (event) {
+    event.stopPropagation()
+    event.preventDefault()
+    edit.add.text(event)
+})
+
+
+
 edit.add.text = function (event) {
-    noteWrapper.onclick = null
     edit.vars.x1 = getMousePosition(event).x
     edit.vars.y1 = getMousePosition(event).y
     note.addElement('text', '', convert.toPoints({x1: edit.vars.x1, y1: edit.vars.y1}))
@@ -80,6 +91,11 @@ edit.select = function (i) {
     if (i != -1) {
         edit.selection.popup.create(i)
         edit.selection.element.classList.add('show')
+        if (app.elementSelected != i) { // dont switch mode if clicking the same element
+            app.elementSelected = i
+            edit.mode.current = 'edit-text'
+            edit.mode.toggle()
+        }
     } else {
         edit.selection.element.classList.remove('show')
     }
@@ -221,7 +237,7 @@ edit.selection.popup.newSection = function (args, i) {
     let string = ''
     switch (args.type) {
         case 'delete':
-            string = `<button onclick="${args.onrun}">Delete</button>`
+            string = `<button class="primary" onclick="${args.onrun}">Delete</button>`
             break
 
         case 'slider':
@@ -274,3 +290,12 @@ edit.selection.popup.newSection = function (args, i) {
 
 
 
+edit.mode.toggle = function () {
+    if (note.elements[app.elementSelected].type === 'text' && edit.mode.current == 'edit') {
+        edit.mode.current = 'edit-text'
+    } else {
+        edit.mode.current = 'edit'
+    }
+    document.getElementById('mode-toggle').checked = edit.mode.current == 'edit-text'
+    edit.mode.current == 'edit-text' ? edit.selection.element.style.pointerEvents = 'none' : edit.selection.element.style.pointerEvents = ''
+}

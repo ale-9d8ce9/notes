@@ -24,6 +24,7 @@
     <div id="selection">
     </div>
     <div id="selection-popup" class="h hover-list" onmousedown="event.stopPropagation()"></div>
+    <input type="checkbox" id="mode-toggle" onchange="edit.mode.toggle()"></div>
 
     <div id="sidebar">
         <input type="text" id="note-title" placeholder="Note Title" oninput="note.name = this.value.trim(); document.title = app.titleName + ' - ' + note.name">

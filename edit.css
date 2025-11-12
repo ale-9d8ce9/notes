@@ -40,7 +40,7 @@
         linear-gradient(#fff 0 0) padding-box,
         linear-gradient(#000 0 0);
     mask-composite: exclude;
-    animation: bc-rotation 2s linear infinite;
+    animation: bc-rotation 4s linear infinite;
 }
 @property --selection-border-rotation {
     syntax: '<angle>';
@@ -102,8 +102,8 @@
     box-shadow: var(--ui-shadow);
     border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
 }
-/* for #selection-popup (hover on selection and on selection popup) */
-#selection:not(:active):hover + #selection-popup, #selection-popup:hover, #selection-popup:active, #selection-popup:has(input[type='color']:focus) {
+/* for #selection-popup (hover on selection and on selection popup) or edit-text mode active*/
+#selection:not(:active):hover + #selection-popup, #selection-popup:hover, #selection-popup:active, #selection-popup:has(input[type='color']:focus), #selection-popup:has(+ #mode-toggle:checked) {
     translate: -50% calc(-100% - calc(var(--selection-border-offset) * 2 + var(--selection-border-width)));
     opacity: 1;
     scale: 1;
@@ -195,6 +195,23 @@
     scale: 1.1;
 }
 
+
+#mode-toggle {
+    position: absolute;
+    position-anchor: --selection;
+    anchor-name: --selection-popup;
+    bottom: anchor(bottom);
+    right: anchor(right);
+    translate: calc(100% + 1rem) calc(100% + 1rem);
+    transition: all var(--transition-duration) var(--transition-curve-bounce), right 0s, bottom 0s;
+    position: absolute;
+    display: inline-flex;
+    
+    padding: var(--ui-icon-padding);
+    flex-direction: row;
+    align-items: center;
+    border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
+}
 
 /* test styles for selection popup (needs #selection-popup-bg after #selection-popup in html)
 

@@ -42,7 +42,7 @@ render.delete = function (i) {
     for (let j = i; j < note.elements.length; j++) {
         document.getElementById('element-' + (j + 1)).setAttribute('id', 'element-' + j)
         document.getElementById('element-data-' + (j + 1)).setAttribute('id', 'element-data-' + j)
-        document.getElementById('element-' + j).setAttribute('onmousedown', 'edit.select(' + j + ')')
+        document.getElementById('element-' + j).setAttribute('onmousedown', 'event.stopPropagation(); edit.select(' + j + ')')
         switch (note.elements[j].type) {
             case 'text':
                 document.getElementById('element-data-' + j).setAttribute('onblur', `

@@ -2,3 +2,8 @@
 
 .hover-list is the class where the ::after follows the cursor and takes the shape of the hovered element (like in #tools or #statusbar)
 .select-list is the class where the hovered element chages its background element (like in font selection popup or text alignment popup)
+
+mode edit
+    move and normal behavior
+mode edit-text
+    disable pointer events on #selections to have full text editing

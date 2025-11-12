@@ -15,6 +15,7 @@ app = {
     noteId: -1,
     isSaving: false,
     elementSelected: -1,
+    previousElementSelected: -1,
     initialWindowInnerWidth: window.innerWidth, // Store the initial window width
 
     fonts: [

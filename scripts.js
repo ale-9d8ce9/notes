@@ -14,7 +14,7 @@ async function start() {
     audio.start()
     // load accounts
     app.accounts = JSON.parse(localStorage.getItem('accounts')) || []
-    app.defaultAccount = parseInt(localStorage.getItem('defaultAccount')) || null
+    localStorage.getItem('defaultAccount') ? app.defaultAccount = parseInt(localStorage.getItem('defaultAccount')) : app.defaultAccount = null
     accounts.updateList()
     app.defaultAccount != null ? accounts.load(app.defaultAccount) : openOverlay('accounts')
 
