@@ -1,4 +1,4 @@
-the ui for my notes app, **still in development**, similar to excalidraw
+the ui for my notes app, **still in development**, similar to excalidraw or freeform
 
 you can try it by downloading the repo or in [github pages](https://ale-9d8ce9.github.io/notes/) but you need to run your own [backend](https://github.com/ale-9d8ce9/notes_backend)
 
