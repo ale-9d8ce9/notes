@@ -21,7 +21,6 @@
 
 }
 #note-wrapper[balls="true"]{
-    backdrop-filter: blur(6vh);
     background-color: oklch(from var(--note-bg) l c h / 0.7);
 }
 

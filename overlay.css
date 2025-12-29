@@ -23,7 +23,7 @@
 
     background-color: var(--overlay-bg);
     padding: var(--overlay-padding);
-    border-radius: var(--overlay-roundness);
+    border-radius: calc(var(--overlay-padding) + var(--ui-elements-roundness));
     border: var(--ui-elements-border-width) solid var(--clr-desat);
     backdrop-filter: blur(var(--overlay-blur));
     max-height: 80vh;

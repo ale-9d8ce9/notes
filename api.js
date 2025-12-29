@@ -74,6 +74,8 @@ async function addAccount(register) {
             getListNotes(app.user.username, app.user.password)
             return true
         } else {
+            console.error('Error creating account:', response.message)
+            alert('Error creating account: ' + response.message)
             return false
         }
 
@@ -131,17 +133,21 @@ async function getListNotes(username, password) {
             <tr>
                 <th>Name</th>
                 <th></th>
-                <th>Date Modified</th>
-                <th>Date Created</th>
+                <th>Modified</th>
+                <th>Created</th>
             </tr>`
         for (let i = 0; i < notes.length; i++) {
             const j = notes[i];
 
-            j.date = (new Date(j.dateModified))
-            j.dateModified = `<div class="dateDate">${j.date.toLocaleDateString()}</div><div class="dateTime">${j.date.toLocaleTimeString()}</div>`
-            j.date = (new Date(j.dateCreated))
-            j.dateCreated = `<div class="dateDate">${j.date.toLocaleDateString()}</div><div class="dateTime">${j.date.toLocaleTimeString()}</div>`
+            let difference = betterDateDifference((new Date()), (new Date(j.dateModified)))
+            let htmlModified = ''
+            difference.day ? htmlModified += `<div class="dateDate">${difference.day}</div>` : undefined
+            htmlModified += `<div class="dateTime">${difference.time}</div>`
 
+            difference = betterDateDifference((new Date()), (new Date(j.dateCreated)))
+            let htmlCreated = ''
+            difference.day ? htmlCreated += `<div class="dateDate">${difference.day}</div>` : undefined
+            htmlCreated += `<div class="dateTime">${difference.time}</div>`
 
             document.getElementById('notes-list').innerHTML += `
                 <tr class="listNoteElement" onclick="getFullNote(${i})">
@@ -149,8 +155,8 @@ async function getListNotes(username, password) {
                     <td class="noteActions">
                         <button class="noteActionButton" onclick="deleteNote(${i}); event.stopPropagation();"><img src="icons/delete.svg"></button>
                     </td>
-                    <td class="dateCell">${j.dateModified}</td>
-                    <td class="dateCell">${j.dateCreated}</td>
+                    <td class="dateCell">${htmlModified}</td>
+                    <td class="dateCell">${htmlCreated}</td>
                 </tr>
             `
         }
@@ -158,8 +164,8 @@ async function getListNotes(username, password) {
         openOverlay('listNotes')
         return true
     } else {
-        // show error
         console.error('Error fetching notes:', notes.message)
+        alert('Error fetching notes: ' + notes.message)
         return false
     }
 }

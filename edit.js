@@ -51,6 +51,7 @@ edit.add.text = function (event) {
     edit.vars.y1 = getMousePosition(event).y
     note.addElement('text', '', convert.toPoints({x1: edit.vars.x1, y1: edit.vars.y1}))
     document.getElementById('element-data-' + (note.elements.length - 1)).focus()
+    noteWrapper.onclick = null
 }
 
 edit.add.image = function (base64String) {
@@ -96,14 +97,12 @@ edit.select = function (i) {
             edit.mode.current = 'edit-text'
             edit.mode.toggle()
         }
-    } else {
-        edit.selection.element.classList.remove('show')
     }
     edit.selection.updatePosition(i)
     app.elementSelected = i
 }
 edit.selection.updatePosition = function (i) {
-    if (i != -1) {
+    if (i >= 0 && i < note.elements.length) {
         let pos = document.getElementById('element-' + i).getBoundingClientRect()
         edit.selection.element.style.left = pos.left + 'px'
         edit.selection.element.style.top = pos.top + 'px'

@@ -213,6 +213,16 @@
     border-radius: calc(var(--ui-icon-roundness) + var(--ui-icon-padding));
 }
 
+
+
+#selection:not(.show) ~ #mode-toggle, #selection:not(.show) ~ #selection-popup{
+    pointer-events: none;
+    opacity: 0;
+    scale: 0;
+}
+
+
+
 /* test styles for selection popup (needs #selection-popup-bg after #selection-popup in html)
 
 

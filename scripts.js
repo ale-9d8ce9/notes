@@ -5,6 +5,7 @@ const noteWrapper = document.getElementById('note-wrapper')
 convert = {}
 
 async function start() {
+    hideUglyScrollbarsOnWindows()
     if (window.location.search.includes('embed=macos')) {
         document.getElementById('sidebar').style.opacity = 0
         document.getElementById('sidebar').style.pointerEvents = 'none'
@@ -16,7 +17,8 @@ async function start() {
     app.accounts = JSON.parse(localStorage.getItem('accounts')) || []
     localStorage.getItem('defaultAccount') ? app.defaultAccount = parseInt(localStorage.getItem('defaultAccount')) : app.defaultAccount = null
     accounts.updateList()
-    app.defaultAccount != null ? accounts.load(app.defaultAccount) : openOverlay('accounts')
+    openOverlay('accounts')
+    app.defaultAccount != null ? accounts.load(app.defaultAccount) : undefined
 
     // import encryption key (if exists)
     if (app.useEncryption && app.encryptionKey != null) {
@@ -171,6 +173,43 @@ document.querySelectorAll('.overlay-x').forEach(function (element) {
 })
 
 // change fullscreen icon in statusbar
-document.addEventListener("fullscreenchange", (event) => {
-  document.getElementById('fullscreen-button').setAttribute('src', `icons/${document.fullscreenElement ? 'exit-fullscreen' : 'fullscreen'}.svg`)
+document.addEventListener("fullscreenchange", () => {
+    document.getElementById('fullscreen-button').setAttribute('src', `icons/${document.fullscreenElement ? 'exit-fullscreen' : 'fullscreen'}.svg`)
 })
+
+
+function betterDateDifference(date1, date2) {
+    let difference = date1 - date2
+    let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    if (difference < 1000) return "now"
+    if (difference < 60 * 1000) return {time: pluralizeString(difference / (1000), "second") + ' ago'}
+    if (difference < 60 * 60 * 1000) return {time: pluralizeString(difference / (60 * 1000), "minute") + ' ago'}
+    if (difference < 24 * 60 * 60 * 1000) return {time: pluralizeString(difference / (60 * 60 * 1000), "hour") + ' ago'}
+    if (difference < 7 * 24 * 60 * 60 * 1000) return {day: days[date2.getDay()], time: 'at ' + date2.toLocaleTimeString()} //last week
+    return {day: date2.toLocaleDateString(), time: 'at ' + date2.toLocaleTimeString()}
+}
+
+function pluralizeString(n, s) {
+    n = parseInt(n)
+    if (n == 1) {
+        return `${n} ${s}`
+    } else {
+        return `${n} ${s}s`
+    }
+        
+}
+
+function hideUglyScrollbarsOnWindows() { // and linux
+    const isNotMacOS = !/Mac|iPhone|iPad|iPod/.test(navigator.platform)
+    
+    if (isNotMacOS) {
+        const style = document.createElement('style')
+        style.textContent = `
+            ::-webkit-scrollbar {
+                width: 0;
+                height: 0;
+            }
+        `
+        document.head.appendChild(style)
+    }
+}

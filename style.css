@@ -15,7 +15,6 @@
 
     --overlay-bg: var(--clr-bg);
     --overlay-padding: 1rem;
-    --overlay-roundness: 1.5rem;
     --overlay-padding-elements: 1rem;
     --overlay-title-bg: oklch(from var(--clr-accent) l c h / 0.51);
     --overlay-blur: 1rem;
@@ -130,6 +129,9 @@ body[in-overlay="true"] > *:not(#overlay){
 body[in-overlay="true"] > #wallpaper{
     opacity: 1;
     pointer-events: all;
+}
+body[in-overlay="false"]:has(#note-wrapper[balls="true"]) > #wallpaper{
+    filter: blur(5.5vh);
 }
 body[loading="true"]{
     cursor: wait;
@@ -257,3 +259,9 @@ body[loading="true"]{
     }
 }
 
+
+/* deleteNoteButton */
+.noteActionButton{
+    background-color: var(--clr-desat);
+    border-color: transparent;
+}
